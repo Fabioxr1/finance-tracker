@@ -1,6 +1,7 @@
 import { X, Check, Trash2, Edit2 } from 'lucide-react';
 import InvestmentHistoryRow from './InvestmentHistoryRow';
 import ModalWrapper from '../common/ModalWrapper';
+import TaxReminder from './TaxReminder';
 
 export default function InvestmentModals({ 
   showAddTitle, setShowAddTitle,
@@ -135,37 +136,13 @@ export default function InvestmentModals({
                 setNewTx({...newTx, total_amount: total, shares});
               }}
               required />
-            {newTx.type === 'sell' && selectedInv?.avgPrice > 0 && newTx.shares > 0 && newTx.price_per_share > 0 && (
-              <div style={{ 
-                background: 'rgba(255, 152, 0, 0.1)', 
-                border: '1px solid rgba(255, 152, 0, 0.3)', 
-                padding: '12px', 
-                borderRadius: '8px',
-                fontSize: '0.85em',
-                color: '#ffa726',
-                lineHeight: '1.4'
-              }}>
-                <div style={{ fontWeight: 'bold', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  💡 Promemoria Tasse
-                </div>
-                {(() => {
-                  const factor = (selectedInv.type === 'BTP' || selectedInv.type === 'Obbligazione') ? 100 : 1;
-                  const rate = factor === 100 ? 0.125 : 0.26;
-                  const gainPerShare = Number(newTx.price_per_share) - Number(selectedInv.avgPrice);
-                  const totalGain = (gainPerShare * Number(newTx.shares)) / factor;
-                  const estimatedTax = totalGain > 0 ? totalGain * rate : 0;
-
-                  if (totalGain <= 0) return <span>Questa vendita non genera plusvalenza (prezzo di vendita ≤ PMC).</span>;
-                  
-                  return (
-                    <span>
-                      Plusvalenza stimata: <strong>€{totalGain.toFixed(2)}</strong>.<br/>
-                      Tasse previste ({rate * 100}%): <strong>€{estimatedTax.toFixed(2)}</strong>.<br/>
-                      Ricordati di registrare l'uscita separata per le tasse!
-                    </span>
-                  );
-                })()}
-              </div>
+            {newTx.type === 'sell' && (
+              <TaxReminder 
+                shares={newTx.shares} 
+                pricePerShare={newTx.price_per_share} 
+                avgPrice={selectedInv?.avgPrice} 
+                assetType={selectedInv?.type} 
+              />
             )}
 
             <div style={{ display: 'flex', gap: '10px' }}>
