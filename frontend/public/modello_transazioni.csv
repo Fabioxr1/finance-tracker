@@ -1,0 +1,4 @@
+Data;Tipo;Importo;Conto;Conto Destinazione;Categoria;Ricorrenza;Tag;Descrizione
+2026-05-01;Uscita;150.50;Unicredit;;Spesa;mensile;#casa #cibo;Spesa settimanale
+2026-05-05;Entrata;2000.00;Unicredit;;Stipendio;mensile;#lavoro;Stipendio Aprile
+2026-05-10;Trasferimento;500.00;Unicredit;Conto Risparmio;;occasionale;#risparmio;Giroconto mensile
