@@ -312,7 +312,7 @@ Questa funzione viene eseguita **ad ogni avvio** del server e garantisce che lo 
 | Gestione Tag | `TagsView.jsx` | — |
 | Analisi Tag | `TagStats.jsx` | `RunwaySimulator` |
 | Investimenti | `InvestmentsView.jsx` | `InvestmentModals`, `InvestmentStats`, `PACSection`, `PortfolioChart`, `PortfolioTable` |
-| Rate & Finanziamenti | `InstallmentsView.jsx` | `InstallmentCard`, `InstallmentForm`, `InstallmentPayModal`, `InstallmentStats` |
+| Rate & Finanziamenti | `InstallmentsView.jsx` | `InstallmentCard`, `InstallmentForm` (Basic, Amount, Date, Config, TagSelector), `InstallmentPayModal`, `InstallmentStats` |
 | Console SQL | `SqlConsoleView.jsx` | — |
 | Configurazione | `ConfigView.jsx` | — |
 
