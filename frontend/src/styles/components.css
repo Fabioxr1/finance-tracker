@@ -281,6 +281,9 @@ th, td {
 .value-negative { color: var(--accent-red); }
 .value-neutral { color: var(--accent-blue); }
 
+.hover-icon-blue:hover { color: var(--accent-blue); transform: scale(1.1); }
+.hover-icon-red:hover { color: var(--accent-red); transform: scale(1.1); }
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
