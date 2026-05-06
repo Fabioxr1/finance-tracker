@@ -245,6 +245,7 @@ Questa funzione viene eseguita **ad ogni avvio** del server e garantisce che lo 
 | Metodo | Endpoint | File Route | Descrizione |
 |--------|----------|-----------|-------------|
 | GET | `/api/health` | `index.js` | Health check DB |
+| — | Design System | `index.css` | Modulare: `vars.css`, `layout.css`, `components.css` |
 | POST | `/api/query` | `index.js` | Console SQL (esegue query libere) |
 | GET | `/api/dashboard-stats?year=` | `dashboard.js` | Stats complete per dashboard |
 | GET | `/api/accounts` | `accounts.js` | Lista conti con saldo calcolato |

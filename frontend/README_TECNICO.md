@@ -15,7 +15,11 @@ frontend/src/
 ├── main.jsx                    # Entry point React (render App)
 ├── App.jsx                     # Layout principale (Sidebar + Routing manuale)
 ├── App.css                     # Stili specifici App
-├── index.css                   # 🎨 DESIGN SYSTEM: tutte le variabili CSS globali
+├── index.css                   # 🎨 ENTRY POINT CSS: importa i moduli da styles/
+├── styles/                     # 🎨 DESIGN SYSTEM MODULARE
+│   ├── vars.css                # Variabili, colori, font e ombre
+│   ├── layout.css              # Reset, struttura (sidebar, main) e responsiveness
+│   └── components.css          # Tutti i componenti (card, btn, table, modal)
 │
 ├── utils/
 │   ├── csvParser.js            # Parser CSV (Import/Export) con supporto 9 colonne
@@ -137,17 +141,15 @@ div.app-container
 
 ---
 
-### `index.css` — Design System
+### `index.css` & `styles/` — Design System Modulare
 
-Contiene **tutte le variabili CSS** e gli stili globali. Ogni componente usa queste variabili.
+Il CSS è diviso in moduli per massimizzare la manutenibilità:
+1.  **`index.css`**: File principale che importa i moduli.
+2.  **`vars.css`**: Definisce le variabili `:root` (palette colori, ombre, spacing).
+3.  **`layout.css`**: Gestisce il reset base e la struttura macro (Sidebar, Header, Main Content e Media Queries strutturali).
+4.  **`components.css`**: Contiene lo stile di tutti gli elementi atomici (bottoni, card, tabelle, modali, input).
 
-**Variabili principali (`:root`):**
-- Colori: `--bg-primary`, `--bg-secondary`, `--text-primary`, `--text-secondary`
-- Accenti: `--accent-blue`, `--accent-green`, `--accent-red`, `--accent-yellow`
-- Bordi: `--border-color`
-- Componenti: `.card`, `.btn`, `.nav-item`, `.page-header`, `.table-responsive`
-
-> ⚠️ **Regola:** Non usare colori hardcoded nei componenti. Usare sempre le variabili CSS.
+> ⚠️ **Regola:** Non aggiungere stili complessi direttamente in `index.css`. Inseriscili nel modulo appropriato in `styles/`.
 
 ---
 
