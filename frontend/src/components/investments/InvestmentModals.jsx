@@ -217,9 +217,8 @@ export default function InvestmentModals({
                 </tbody>
               </table>
             </div>
-          </div>
-        </div>
-      )}
+          </ModalWrapper>
+        )}
 
       {/* 5. NUOVO PAC */}
       {showAddPlan && (
