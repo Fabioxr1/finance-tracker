@@ -304,7 +304,7 @@ Questa funzione viene eseguita **ad ogni avvio** del server e garantisce che lo 
 |-------------|-----------|-----------------|
 | Dashboard | `DashboardView.jsx` | `StatsCards`, `AccountsGrid`, `CashFlowStats`, `HistoryChart`, `CategoryRanking`, `MonthlyTable`, `DeadlineSummary`, `PredictionCard` |
 | Conti & Carte | `AccountsView.jsx` | — |
-| Transazioni | `TransactionsView.jsx` | `useTransactions` (Hook), `TransactionFilters`, `TransactionForm`, `TransactionTable`, `TransactionPagination`, `CSVControls` |
+| Transazioni | `TransactionsView.jsx` | `useTransactions` (Hook), `TransactionFilters`, `TransactionForm`, `TransactionTable` (DesktopRow, MobileCard), `TransactionPagination`, `CSVControls` |
 | Scadenze | `DeadlinesView.jsx` | `DeadlineForm`, `DeadlineItem`, `DeadlineList` |
 | Abbonamenti | `SubscriptionsView.jsx` | — |
 | Gestione Tag | `TagsView.jsx` | — |

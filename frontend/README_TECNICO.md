@@ -49,10 +49,11 @@ frontend/src/
 │   │   ├── DeadlineSummary.jsx # Riepilogo scadenze annuali
 │   │   └── PredictionCard.jsx # Simulatore di Risparmio con slider
 │   │
-│   ├── transactions/           # Sotto-componenti Transazioni
 │   │   ├── TransactionFilters.jsx  # Barra filtri (anno, mese, tipo, conto, ecc.)
 │   │   ├── TransactionForm.jsx     # Form aggiunta nuova transazione
-│   │   ├── TransactionTable.jsx    # Tabella con editing inline
+│   │   ├── TransactionTable.jsx    # Container tabella
+│   │   ├── TransactionDesktopRow.jsx # 🧩 Singola riga desktop (view/edit)
+│   │   ├── TransactionMobileCard.jsx # 🧩 Singola card mobile (view/edit)
 │   │   ├── TransactionPagination.jsx # Paginazione
 │   │   └── CSVControls.jsx         # Pulsante importazione CSV
 │   │
@@ -218,7 +219,10 @@ Agisce come orchestratore dei sotto-componenti:
 1. **`CSVControls`** — Pulsanti import/export
 2. **`TransactionFilters`** — Barra filtri (ora con ricerca per ID e Prezzo "fuzzy")
 3. **`TransactionForm`** — Inserimento rapido
-4. **`TransactionTable`** — Visualizzazione e editing (mostra colonna **ID**)
+4. **`TransactionTable`** — Orchestratore della visualizzazione:
+    - Utilizza **`TransactionDesktopRow`** per il layout tabellare su PC.
+    - Utilizza **`TransactionMobileCard`** per il layout a card su smartphone.
+    - Entrambi gestiscono internamente la logica di **Editing Inline**.
 5. **`TransactionPagination`** — Navigazione pagine
 
 **Funzioni chiave:**
