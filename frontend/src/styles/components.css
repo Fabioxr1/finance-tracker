@@ -154,7 +154,6 @@
   border-radius: 16px;
   padding: 30px;
   width: 90%;
-  max-width: 500px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.4);
   animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -189,7 +189,7 @@ export default function InvestmentModals({
       {/* 4. STORICO */}
       {showHistory && (
         <div className="modal-overlay">
-          <div className="modal-content card" style={{ width: '850px', maxHeight: '85vh', overflowY: 'auto', padding: '30px' }}>
+          <div className="modal-content card" style={{ width: '950px', maxWidth: '95vw', maxHeight: '85vh', overflowY: 'auto', padding: '30px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '25px', alignItems: 'center' }}>
               <div>
                 <h3 className="card-title" style={{ fontSize: '1.4rem', margin: 0 }}>Storico Movimenti</h3>
@@ -202,12 +202,12 @@ export default function InvestmentModals({
               <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 8px' }}>
                 <thead>
                   <tr style={{ textAlign: 'left' }}>
-                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Data</th>
-                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tipo</th>
-                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>Quote</th>
-                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>Prezzo</th>
-                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>Totale</th>
-                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'center' }}>Azioni</th>
+                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Data</th>
+                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Tipo</th>
+                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right', whiteSpace: 'nowrap' }}>Quote</th>
+                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right', whiteSpace: 'nowrap' }}>Prezzo</th>
+                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right', whiteSpace: 'nowrap' }}>Totale</th>
+                    <th style={{ padding: '12px', color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'center', whiteSpace: 'nowrap' }}>Azioni</th>
                   </tr>
                 </thead>
                 <tbody>
