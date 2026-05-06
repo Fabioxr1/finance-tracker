@@ -190,7 +190,7 @@ Esegue **7 query parallele** e restituisce un oggetto unico:
 Il file più complesso. Gestisce operazioni singole, di massa e importazione.
 
 #### `GET /` — Lista con filtri e paginazione
-**Filtri disponibili:** `year`, `month`, `type`, `account_id`, `category_id`, `description` (ILIKE), `installment_id`, `tag_id`
+**Filtri disponibili:** `year`, `month`, `type`, `account_id`, `category_id`, `description` (ILIKE), `installment_id`, `tag_id`, **`id` (ricerca esatta)**, **`amount` (ricerca testuale parziale)**
 
 **Paginazione:** `page` (default 1), `limit` (default 50). Per l'esportazione CSV completa, il frontend richiede un `limit` molto alto (es. 100000).
 
@@ -225,10 +225,12 @@ Il file più complesso. Gestisce operazioni singole, di massa e importazione.
 4. Riscrive i tag: DELETE tutti + INSERT nuovi
 5. Logga la modifica
 
-#### `POST /bulk` — Import massivo
-- Riceve array `transactions`
-- Per ogni transazione: associazione automatica finanziamento + creazione + tag
-- Tutto in un'unica transazione DB (ROLLBACK se errore)
+#### `POST /bulk` — Import massivo (Smart Update/Create)
+- Riceve array `transactions`.
+- **Logica ID**: Se una riga contiene un ID esistente, esegue `updateTransaction` (permette modifica via CSV).
+- Se l'ID manca, esegue `createTransaction` (inserimento standard).
+- Gestisce automaticamente l'associazione finanziamenti e i contatori delle rate anche durante gli aggiornamenti.
+- Tutto in un'unica transazione DB (ROLLBACK se errore).
 
 #### `POST /bulk-delete` — Eliminazione massiva
 - Riceve array `ids`
@@ -447,9 +449,9 @@ Servizio centralizzato per la creazione transazioni. **Tutte le route che creano
 1. **Estrae tag**: Gestisce sia `tags` (array di ID) che `tagNames` (array di stringhe).
 2. **Auto-creazione Tag**: Se viene passato `tagNames`, il servizio cerca il tag per nome (case-insensitive) o lo crea se non esiste, associandolo poi alla transazione.
 3. **Valida campi obbligatori**: `amount`, `type`, `date`, `category_id` (eccetto transfer).
-4. **Verifica account**: Almeno uno tra `account_id` o `to_account_id`.
-5. **Costruisce query dinamica**: Supporta tutti i campi della tabella `transactions` inclusa la `recurrence_type`.
-6. **Logga**: Su console e su file.
+4. **Update Centralizzato**: Include `updateTransaction(id, data)` per gestire modifiche singole e bulk con sincronizzazione tag.
+5. **Verifica account**: Almeno uno tra `account_id` o `to_account_id`.
+6. **Logga**: Su console e su file per ogni operazione (CREATE/UPDATE).
 
 > ⚠️ **Non duplicare mai la logica di creazione transazione nelle route.** Usare sempre questo service.
 

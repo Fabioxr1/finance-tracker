@@ -30,7 +30,7 @@ Finance Tracker è un'applicazione **self-hosted** per la gestione completa dell
 |--------|-------------|
 | **Dashboard** | Riepilogo finanziario annuale con grafici, categorie, previsioni |
 | **Conti & Carte** | Gestione conti bancari con saldo calcolato in tempo reale |
-| **Transazioni** | CRUD completo, importazione CSV, filtri avanzati, operazioni di massa, **Duplicazione** |
+| **Transazioni** | CRUD completo, importazione CSV con **Update via ID**, filtri (ID, Prezzo), operazioni di massa, **Duplicazione** |
 | **Scadenze** | Pagamenti ricorrenti annuali (bollo, assicurazione, ecc.) |
 | **Abbonamenti** | Spese mensili ricorrenti (Netflix, Spotify, ecc.) |
 | **Tag** | Etichettatura trasversale delle transazioni + analisi statistica |
@@ -304,7 +304,7 @@ Questa funzione viene eseguita **ad ogni avvio** del server e garantisce che lo 
 |-------------|-----------|-----------------|
 | Dashboard | `DashboardView.jsx` | `StatsCards`, `AccountsGrid`, `CashFlowStats`, `HistoryChart`, `CategoryRanking`, `MonthlyTable`, `DeadlineSummary`, `PredictionCard` |
 | Conti & Carte | `AccountsView.jsx` | — |
-| Transazioni | `TransactionsView.jsx` | `TransactionFilters`, `TransactionForm`, `TransactionTable`, `TransactionPagination`, `CSVControls` |
+| Transazioni | `TransactionsView.jsx` | `useTransactions` (Hook), `TransactionFilters`, `TransactionForm`, `TransactionTable`, `TransactionPagination`, `CSVControls` |
 | Scadenze | `DeadlinesView.jsx` | `DeadlineForm`, `DeadlineItem`, `DeadlineList` |
 | Abbonamenti | `SubscriptionsView.jsx` | — |
 | Gestione Tag | `TagsView.jsx` | — |
@@ -336,9 +336,15 @@ Quando si crea una transazione (singola o bulk):
 4. Il contatore `paid_installments` viene incrementato
 5. I tag di default del finanziamento vengono applicati alla transazione
 
-> File: `backend/routes/transactions.js` (POST / e POST /bulk)
+### 3. Aggiornamento Massivo via CSV (Round-trip)
+Il sistema supporta l'aggiornamento di transazioni esistenti tramite CSV:
+1. L'esportazione include la colonna **ID**.
+2. Se il file importato contiene un ID valido in prima colonna, il backend esegue un `UPDATE` invece di un `INSERT`.
+3. Vengono gestiti automaticamente i ricalcoli dei finanziamenti e la sincronizzazione dei Tag.
 
-### 3. Investimenti — Flusso Acquisto/Vendita
+> File: `backend/routes/transactions.js` (POST /bulk) e `frontend/src/utils/csvParser.js`
+
+### 4. Investimenti — Flusso Acquisto/Vendita
 1. L'utente crea un acquisto/vendita di un titolo
 2. Viene creata una **transazione di tipo `transfer`** (giroconto)
    - **Acquisto:** dal conto bancario → al conto sistema "Investimenti"
@@ -401,12 +407,12 @@ docker exec -it reactspese_local-frontend-1 npm test
 ## ⚠️ Regole per le Modifiche
 
 1. **MAI eliminare** funzioni o logiche esistenti senza conferma esplicita
-2. **Modifiche chirurgiche**: intervenire solo sulle righe necessarie, non riscrivere interi file
-3. **Backup obbligatorio**: creare copia in `backupsicirezzafile/` prima di ogni modifica
-4. **Schema DB**: ogni modifica va sia in `init.sql` che in `initDB()` di `index.js`
-5. **Test**: eseguire dopo modifiche alla logica di calcolo
-6. **Docker**: `docker compose up -d --build` dopo modifiche strutturali
-7. **UI/UX**: usare variabili CSS da `index.css` e icone `lucide-react`
+2. **Modifiche chirurgiche**: intervenire solo sulle righe necessarie (usando `multi_replace_file_content`)
+3. **Sicurezza Git**: prima di ogni sessione o modifica strutturale, eseguire un `commit` di stato.
+4. **Backup fisico**: mantenere comunque copie in `backupsicirezzafile/` per modifiche critiche.
+5. **Schema DB**: ogni modifica va sia in `init.sql` che in `initDB()` di `index.js`
+6. **Test**: eseguire `npm test` dopo ogni modifica alla logica di calcolo o al parsing.
+7. **Docker**: `docker compose up -d --build` dopo modifiche a `init.sql` o dipendenze.
 
 ---
 

@@ -23,7 +23,8 @@ frontend/src/
 │   └── investmentUtils.js      # Calcoli dinamici per l'interfaccia investimenti (PAC, quote)
 │
 ├── hooks/
-│   └── useInvestments.js       # 🛡️ Custom Hook: logica e stato della sezione Investimenti
+│   ├── useInvestments.js       # 🛡️ Custom Hook: logica e stato della sezione Investimenti
+│   └── useTransactions.js      # 🛡️ Custom Hook: logica e stato della sezione Transazioni
 │
 ├── components/
 │   ├── DashboardView.jsx       # Pagina Dashboard
@@ -198,18 +199,27 @@ simEndOfYearBalance = saldo + (entrate - (uscite + simFreeBudget))
 
 ### 📋 `TransactionsView.jsx` — Gestione Transazioni
 
-Il componente più complesso dell'app. Gestisce:
+- Sinistra: Budget Libero, Proiezione 31/12, Slider, Autonomia
+- Destra: Dettaglio flussi (entrate reali, spese reali, entrate stimate, spese previste, scadenze+rate)
 
-**Stato principale:**
+---
+
+L'architettura è stata rifattorizzata utilizzando il Custom Hook **`useTransactions.js`**, che separa completamente la logica di business (chiamate API, gestione stato, import/export) dalla presentazione UI.
+
+**Stato e Logica (gestiti dall'hook):**
 - `transactions` — Array transazioni della pagina corrente
-- `accounts`, `categories`, `installments`, `availableTags` — Dati di supporto
-- `filters` — Oggetto con tutti i filtri attivi
-- `pagination` — `{ page, limit, totalPages, total }`
-- `newTx` — Dati del form di creazione
-- `editingId` / `editTx` — Transazione in modifica inline
-- `selectedIds` — Array ID selezionati per operazioni di massa
+- `filters` — Oggetto filtri (include nuovi filtri per **ID** e **Prezzo**)
+- `fetchData` — Funzione centralizzata di ricaricamento dati
+- `handleFileUpload` — Logica di importazione CSV (supporta **Update via ID**)
+- Operazioni CRUD (add, edit, delete, bulk delete/update)
 
-**Fetch:** Carica in parallelo: transazioni, conti, categorie, finanziamenti, tag. Si ricarica quando cambiano filtri o pagina.
+**Componente UI (`TransactionsView.jsx`):**
+Agisce come orchestratore dei sotto-componenti:
+1. **`CSVControls`** — Pulsanti import/export
+2. **`TransactionFilters`** — Barra filtri (ora con ricerca per ID e Prezzo "fuzzy")
+3. **`TransactionForm`** — Inserimento rapido
+4. **`TransactionTable`** — Visualizzazione e editing (mostra colonna **ID**)
+5. **`TransactionPagination`** — Navigazione pagine
 
 **Funzioni chiave:**
 | Funzione | Cosa fa |
