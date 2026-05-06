@@ -6,8 +6,8 @@ export default function InstallmentDateFields({ formData, onChange }) {
         <input 
           type="date" 
           className="text-input" 
-          value={formData.start_date} 
-          onChange={(e) => onChange({...formData, start_date: e.target.value})} 
+          value={formData.start_date || ''} 
+          onChange={(e) => onChange(prev => ({...prev, start_date: e.target.value}))} 
           required 
         />
       </div>
@@ -16,8 +16,8 @@ export default function InstallmentDateFields({ formData, onChange }) {
         <input 
           type="date" 
           className="text-input" 
-          value={formData.end_date} 
-          onChange={(e) => onChange({...formData, end_date: e.target.value})} 
+          value={formData.end_date || ''} 
+          onChange={(e) => onChange(prev => ({...prev, end_date: e.target.value}))} 
           required 
         />
       </div>

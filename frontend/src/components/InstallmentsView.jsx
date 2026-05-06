@@ -186,15 +186,15 @@ export default function InstallmentsView() {
   };
 
   const toggleTag = (tagId, isEditing = false) => {
-    const target = isEditing ? selectedInst : newInst;
     const setter = isEditing ? setSelectedInst : setNewInst;
-    const currentTags = target.tags || [];
     
-    if (currentTags.includes(tagId)) {
-      setter({ ...target, tags: currentTags.filter(id => id !== tagId) });
-    } else {
-      setter({ ...target, tags: [...currentTags, tagId] });
-    }
+    setter(prev => {
+      const currentTags = prev.tags || [];
+      const newTags = currentTags.includes(tagId)
+        ? currentTags.filter(id => id !== tagId)
+        : [...currentTags, tagId];
+      return { ...prev, tags: newTags };
+    });
   };
 
   const totalResidual = installments.reduce((acc, curr) => acc + Number(curr.remainingAmount), 0);

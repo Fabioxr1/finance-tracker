@@ -7,8 +7,8 @@ export default function InstallmentBasicFields({ formData, onChange }) {
           <input 
             type="text" 
             className="text-input" 
-            value={formData.name} 
-            onChange={(e) => onChange({...formData, name: e.target.value})} 
+            value={formData.name || ''} 
+            onChange={(e) => onChange(prev => ({...prev, name: e.target.value}))} 
             placeholder="es. Mutuo Casa" 
             required 
           />
@@ -18,8 +18,8 @@ export default function InstallmentBasicFields({ formData, onChange }) {
           <input 
             type="number" 
             className="text-input" 
-            value={formData.paid_installments} 
-            onChange={(e) => onChange({...formData, paid_installments: e.target.value})} 
+            value={formData.paid_installments || 0} 
+            onChange={(e) => onChange(prev => ({...prev, paid_installments: e.target.value}))} 
             required 
           />
         </div>
@@ -30,8 +30,8 @@ export default function InstallmentBasicFields({ formData, onChange }) {
         <input 
           type="text" 
           className="text-input" 
-          value={formData.description} 
-          onChange={(e) => onChange({...formData, description: e.target.value})} 
+          value={formData.description || ''} 
+          onChange={(e) => onChange(prev => ({...prev, description: e.target.value}))} 
           placeholder="es. Intesa Sanpaolo, Findomestic" 
         />
       </div>

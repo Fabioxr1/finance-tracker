@@ -7,8 +7,8 @@ export default function InstallmentAmountFields({ formData, onChange }) {
           type="number" 
           step="0.01" 
           className="text-input" 
-          value={formData.total_amount} 
-          onChange={(e) => onChange({...formData, total_amount: e.target.value})} 
+          value={formData.total_amount || ''} 
+          onChange={(e) => onChange(prev => ({...prev, total_amount: e.target.value}))} 
           required 
         />
       </div>
@@ -18,8 +18,8 @@ export default function InstallmentAmountFields({ formData, onChange }) {
           type="number" 
           step="0.01" 
           className="text-input" 
-          value={formData.monthly_amount} 
-          onChange={(e) => onChange({...formData, monthly_amount: e.target.value})} 
+          value={formData.monthly_amount || ''} 
+          onChange={(e) => onChange(prev => ({...prev, monthly_amount: e.target.value}))} 
           required 
         />
       </div>

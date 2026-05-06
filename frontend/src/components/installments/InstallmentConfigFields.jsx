@@ -5,8 +5,8 @@ export default function InstallmentConfigFields({ formData, onChange, accounts =
         <label style={{ fontSize: '0.85em', color: 'var(--text-secondary)' }}>Conto di Addebito</label>
         <select 
           className="text-input" 
-          value={formData.account_id} 
-          onChange={(e) => onChange({...formData, account_id: e.target.value})}
+          value={formData.account_id || ''} 
+          onChange={(e) => onChange(prev => ({...prev, account_id: e.target.value}))}
           required
         >
           <option value="">Seleziona un conto</option>
@@ -20,8 +20,8 @@ export default function InstallmentConfigFields({ formData, onChange, accounts =
         <input 
           type="text" 
           className="text-input" 
-          value={formData.search_keyword} 
-          onChange={(e) => onChange({...formData, search_keyword: e.target.value})} 
+          value={formData.search_keyword || ''} 
+          onChange={(e) => onChange(prev => ({...prev, search_keyword: e.target.value}))} 
           placeholder="es. MUTUO" 
         />
       </div>
