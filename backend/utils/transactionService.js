@@ -5,6 +5,11 @@
 
 const { logTransaction } = require('./logger');
 
+const TRANSACTION_COLUMNS = [
+  'account_id', 'to_account_id', 'category_id', 'installment_id', 
+  'amount', 'type', 'recurrence_type', 'date', 'description'
+];
+
 const transactionService = {
   /**
    * Crea una nuova transazione
@@ -32,10 +37,12 @@ const transactionService = {
         throw new Error("Errore Validazione: È necessario fornire almeno uno tra 'account_id' o 'to_account_id'.");
       }
 
-      // 2. Sanificazione Dati: Convertiamo stringhe vuote in NULL per il DB
+      // 2. Sanificazione Dati: Filtriamo solo le colonne reali del DB e convertiamo stringhe vuote in NULL
       const sanitizedData = {};
       for (const [key, value] of Object.entries(transactionData)) {
-        sanitizedData[key] = value === "" ? null : value;
+        if (TRANSACTION_COLUMNS.includes(key)) {
+          sanitizedData[key] = value === "" ? null : value;
+        }
       }
 
       // 3. Costruzione Dinamica della Query per la tabella transactions
@@ -122,10 +129,10 @@ const transactionService = {
     try {
       const { tags, tagNames, ...transactionData } = data;
 
-      // 1. Sanificazione Dati
+      // 1. Sanificazione Dati: Filtriamo solo le colonne reali del DB e convertiamo stringhe vuote in NULL
       const sanitizedData = {};
       for (const [key, value] of Object.entries(transactionData)) {
-        if (value !== undefined) {
+        if (TRANSACTION_COLUMNS.includes(key) && value !== undefined) {
           sanitizedData[key] = value === "" ? null : value;
         }
       }
