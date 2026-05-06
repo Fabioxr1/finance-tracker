@@ -316,8 +316,15 @@ router.post('/bulk-delete', async (req, res) => {
       }
     }
 
+    // Recuperiamo i dati completi per il logging prima di eliminare
+    const deletedTxsRes = await client.query('SELECT * FROM transactions WHERE id = ANY($1)', [ids]);
+    
     await client.query('DELETE FROM transactions WHERE id = ANY($1)', [ids]);
     await client.query('COMMIT');
+
+    // Logging post-commit
+    deletedTxsRes.rows.forEach(tx => logTransaction(tx, 'DELETE'));
+
     res.json({ success: true });
   } catch (err) {
     await client.query('ROLLBACK');
@@ -365,6 +372,11 @@ router.post('/bulk-update', async (req, res) => {
     }
 
     await client.query('COMMIT');
+
+    // Recuperiamo le transazioni aggiornate per il logging
+    const updatedTxsRes = await pool.query('SELECT * FROM transactions WHERE id = ANY($1)', [ids]);
+    updatedTxsRes.rows.forEach(tx => logTransaction(tx, 'UPDATE'));
+
     res.json({ success: true });
   } catch (err) {
     await client.query('ROLLBACK');
