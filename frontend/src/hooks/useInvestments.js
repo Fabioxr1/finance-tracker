@@ -200,7 +200,14 @@ export default function useInvestments() {
     const totalGain = totalValue - totalInvested;
     const gainPercent = totalInvested > 0 ? (totalGain / totalInvested) * 100 : 0;
     
-    return { totalValue, totalInvested, totalGain, gainPercent };
+    const totalEstimatedTaxes = portfolio.reduce((acc, curr) => {
+      const gain = Number(curr.gain || 0);
+      if (gain <= 0) return acc;
+      const rate = (curr.type === 'BTP' || curr.type === 'Obbligazione') ? 0.125 : 0.26;
+      return acc + (gain * rate);
+    }, 0);
+
+    return { totalValue, totalInvested, totalGain, gainPercent, totalEstimatedTaxes };
   }, [portfolio]);
 
   return {

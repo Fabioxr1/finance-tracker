@@ -1,8 +1,10 @@
-import { Wallet, Briefcase, TrendingUp, TrendingDown } from 'lucide-react';
+import { Wallet, Briefcase, TrendingUp, TrendingDown, Calculator } from 'lucide-react';
 
-export default function InvestmentStats({ totalValue, totalInvested, totalGain, gainPercent }) {
+export default function InvestmentStats({ totalValue, totalInvested, totalGain, gainPercent, totalEstimatedTaxes }) {
+  const netValue = totalValue - (totalEstimatedTaxes || 0);
+
   return (
-    <div className="stats-grid" style={{ marginBottom: '30px' }}>
+    <div className="stats-grid" style={{ marginBottom: '30px', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
       <div className="stat-card">
         <div className="stat-header">
           <span className="stat-label">Valore Totale</span>
@@ -11,6 +13,9 @@ export default function InvestmentStats({ totalValue, totalInvested, totalGain, 
           </div>
         </div>
         <div className="stat-value">€{totalValue.toLocaleString('it-IT', { minimumFractionDigits: 2 })}</div>
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+          Netto stimato: €{netValue.toLocaleString('it-IT', { minimumFractionDigits: 2 })}
+        </div>
       </div>
 
       <div className="stat-card">
@@ -35,6 +40,21 @@ export default function InvestmentStats({ totalValue, totalInvested, totalGain, 
         </div>
         <div className="stat-value" style={{ color: totalGain >= 0 ? 'var(--accent-green)' : 'var(--accent-red)' }}>
           {totalGain >= 0 ? '+' : ''}€{totalGain.toLocaleString('it-IT', { minimumFractionDigits: 2 })} ({gainPercent.toFixed(2)}%)
+        </div>
+      </div>
+
+      <div className="stat-card">
+        <div className="stat-header">
+          <span className="stat-label">Tasse Potenziali</span>
+          <div className="stat-icon" style={{ background: 'rgba(255, 152, 0, 0.1)', color: '#ffa726' }}>
+            <Calculator size={20} />
+          </div>
+        </div>
+        <div className="stat-value" style={{ color: '#ffa726' }}>
+          €{(totalEstimatedTaxes || 0).toLocaleString('it-IT', { minimumFractionDigits: 2 })}
+        </div>
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+          Basate su plusvalenze attuali
         </div>
       </div>
     </div>

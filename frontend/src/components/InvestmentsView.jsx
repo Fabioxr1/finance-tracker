@@ -56,6 +56,7 @@ export default function InvestmentsView() {
         totalInvested={stats.totalInvested} 
         totalGain={stats.totalGain} 
         gainPercent={stats.gainPercent} 
+        totalEstimatedTaxes={stats.totalEstimatedTaxes}
       />
 
       {/* SEZIONE PAC */}
