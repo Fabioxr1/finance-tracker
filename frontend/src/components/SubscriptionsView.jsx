@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Calendar, CreditCard, Tag, Check, X, Bell, BellOff, RefreshCw, Edit2, TrendingDown } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import ModalWrapper from './common/ModalWrapper';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -332,13 +333,12 @@ export default function SubscriptionsView() {
       </div>
 
       {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content" style={{ maxWidth: '480px' }}>
-            <div className="card-header" style={{ marginBottom: '25px' }}>
-              <h3 className="page-title" style={{ fontSize: '1.4rem' }}>{editingId ? 'Modifica Abbonamento' : 'Nuovo Abbonamento'}</h3>
-              <X className="edit-icon" onClick={() => setIsModalOpen(false)} />
-            </div>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <ModalWrapper 
+          title={editingId ? 'Modifica Abbonamento' : 'Nuovo Abbonamento'} 
+          onClose={() => setIsModalOpen(false)}
+          width="480px"
+        >
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
               <div className="form-group">
                 <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '8px', display: 'block' }}>Nome del Servizio</label>
                 <input 
@@ -446,8 +446,7 @@ export default function SubscriptionsView() {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+        </ModalWrapper>
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import ModalWrapper from '../common/ModalWrapper';
 
 export default function InstallmentPayModal({ 
   selectedInst, 
@@ -9,12 +10,7 @@ export default function InstallmentPayModal({
   setPaymentData
 }) {
   return (
-    <div className="modal-overlay">
-      <div className="modal-content card" style={{ maxWidth: '400px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-          <h3 className="card-title">Registra Pagamento Rata</h3>
-          <X onClick={onClose} style={{ cursor: 'pointer' }} />
-        </div>
+    <ModalWrapper title="Registra Pagamento Rata" onClose={onClose}>
         
         <p style={{ fontSize: '0.9em', color: 'var(--text-secondary)', marginBottom: '20px' }}>
           Stai registrando la rata per: <strong>{selectedInst?.name}</strong>
@@ -78,7 +74,6 @@ export default function InstallmentPayModal({
             <button type="button" className="year-selector" onClick={onClose} style={{ flex: 1 }}>Annulla</button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalWrapper>
   );
 }

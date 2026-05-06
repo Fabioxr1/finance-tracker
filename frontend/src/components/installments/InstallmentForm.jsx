@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import ModalWrapper from '../common/ModalWrapper';
 import InstallmentBasicFields from './InstallmentBasicFields';
 import InstallmentAmountFields from './InstallmentAmountFields';
 import InstallmentDateFields from './InstallmentDateFields';
@@ -18,12 +19,11 @@ export default function InstallmentForm({
   const commonProps = { formData, onChange };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content card" style={{ width: '550px', maxHeight: '90vh', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-          <h3 className="card-title">{isEditing ? 'Modifica' : 'Nuovo'} Finanziamento</h3>
-          <X onClick={onCancel} style={{ cursor: 'pointer' }} />
-        </div>
+    <ModalWrapper 
+      title={`${isEditing ? 'Modifica' : 'Nuovo'} Finanziamento`} 
+      onClose={onCancel}
+      width="550px"
+    >
         
         <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           
@@ -48,7 +48,6 @@ export default function InstallmentForm({
             <button type="button" className="year-selector" style={{ flex: 1 }} onClick={onCancel}>Annulla</button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalWrapper>
   );
 }
