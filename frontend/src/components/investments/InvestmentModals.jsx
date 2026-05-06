@@ -1,5 +1,6 @@
 import { X, Check, Trash2, Edit2 } from 'lucide-react';
 import InvestmentHistoryRow from './InvestmentHistoryRow';
+import ModalWrapper from '../common/ModalWrapper';
 
 export default function InvestmentModals({ 
   showAddTitle, setShowAddTitle,
@@ -27,11 +28,7 @@ export default function InvestmentModals({
     <>
       {/* 1. NUOVO TITOLO */}
       {showAddTitle && (
-        <div className="modal-overlay"><div className="modal-content card" style={{ width: '400px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <h3 className="card-title">Nuovo Titolo</h3>
-            <X onClick={() => setShowAddTitle(false)} style={{ cursor: 'pointer' }} />
-          </div>
+        <ModalWrapper title="Nuovo Titolo" onClose={() => setShowAddTitle(false)}>
           <form onSubmit={addTitle} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <input type="text" placeholder="Nome" className="text-input" value={newTitle.name} onChange={e => setNewTitle({...newTitle, name: e.target.value})} required />
             <div style={{ display: 'flex', gap: '10px' }}>
@@ -62,16 +59,12 @@ export default function InvestmentModals({
               <button type="button" onClick={() => setShowAddTitle(false)} className="year-selector" style={{ flex: 1 }}>Annulla</button>
             </div>
           </form>
-        </div></div>
+        </ModalWrapper>
       )}
 
       {/* 2. MODIFICA TITOLO */}
       {showEditTitle && (
-        <div className="modal-overlay"><div className="modal-content card" style={{ width: '400px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <h3 className="card-title">Modifica Titolo</h3>
-            <X onClick={() => setShowEditTitle(false)} style={{ cursor: 'pointer' }} />
-          </div>
+        <ModalWrapper title="Modifica Titolo" onClose={() => setShowEditTitle(false)}>
           <form onSubmit={updateTitle} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <input type="text" className="text-input" value={editTitleData.name} onChange={e => setEditTitleData({...editTitleData, name: e.target.value})} placeholder="Nome" />
             <input type="text" className="text-input" value={editTitleData.ticker} onChange={e => setEditTitleData({...editTitleData, ticker: e.target.value})} placeholder="Ticker (es. SWDA.MI)" />
@@ -89,16 +82,12 @@ export default function InvestmentModals({
               <button type="button" onClick={() => setShowEditTitle(false)} className="year-selector" style={{ flex: 1 }}>Annulla</button>
             </div>
           </form>
-        </div></div>
+        </ModalWrapper>
       )}
 
       {/* 3. AGGIUNGI TRANSAZIONE */}
       {showAddTx && (
-        <div className="modal-overlay"><div className="modal-content card" style={{ width: '400px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <h3 className="card-title">Movimento: {selectedInv?.name}</h3>
-            <X onClick={() => setShowAddTx(false)} style={{ cursor: 'pointer' }} />
-          </div>
+        <ModalWrapper title={`Movimento: ${selectedInv?.name}`} onClose={() => setShowAddTx(false)}>
           <form onSubmit={addTransaction} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <div style={{ display: 'flex', gap: '10px' }}>
               <select className="year-selector" value={newTx.type} onChange={e => setNewTx({...newTx, type: e.target.value})} style={{flex: 1}}>
@@ -184,22 +173,21 @@ export default function InvestmentModals({
               <button type="button" onClick={() => setShowAddTx(false)} className="year-selector" style={{ flex: 1 }}>Annulla</button>
             </div>
           </form>
-        </div></div>
+        </ModalWrapper>
       )}
 
       {/* 4. STORICO */}
       {showHistory && (
-        <div className="modal-overlay">
-          <div className="modal-content card" style={{ width: '950px', maxWidth: '95vw', maxHeight: '85vh', overflowY: 'auto', padding: '30px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '25px', alignItems: 'center' }}>
-              <div>
-                <h3 className="card-title" style={{ fontSize: '1.4rem', margin: 0 }}>Storico Movimenti</h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>{selectedInv?.name} ({selectedInv?.ticker})</p>
-              </div>
-              <X onClick={() => setShowHistory(false)} style={{ cursor: 'pointer', opacity: 0.6 }} />
-            </div>
-
-            <div className="table-responsive">
+        <ModalWrapper 
+          title="Storico Movimenti" 
+          onClose={() => setShowHistory(false)} 
+          width="950px"
+          style={{ paddingBottom: '30px' }}
+        >
+          <div style={{ marginTop: '-15px', marginBottom: '20px' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{selectedInv?.name} ({selectedInv?.ticker})</p>
+          </div>
+          <div className="table-responsive">
               <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 8px' }}>
                 <thead>
                   <tr style={{ textAlign: 'left' }}>
@@ -235,11 +223,7 @@ export default function InvestmentModals({
 
       {/* 5. NUOVO PAC */}
       {showAddPlan && (
-        <div className="modal-overlay"><div className="modal-content card" style={{ width: '400px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <h3 className="card-title">Nuovo PAC</h3>
-            <X onClick={() => setShowAddPlan(false)} style={{ cursor: 'pointer' }} />
-          </div>
+        <ModalWrapper title="Nuovo PAC" onClose={() => setShowAddPlan(false)}>
           <form onSubmit={addPlan} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <input type="text" placeholder="Nome Piano" className="text-input" value={newPlan.name} onChange={e => setNewPlan({...newPlan, name: e.target.value})} required />
             <select className="year-selector" value={newPlan.investment_id} onChange={e => setNewPlan({...newPlan, investment_id: e.target.value})} required>
@@ -252,16 +236,12 @@ export default function InvestmentModals({
               <button type="button" onClick={() => setShowAddPlan(false)} className="year-selector" style={{ flex: 1 }}>Annulla</button>
             </div>
           </form>
-        </div></div>
+        </ModalWrapper>
       )}
 
       {/* 6. ESECUZIONE PAC */}
       {showExecutePlan && (
-        <div className="modal-overlay"><div className="modal-content card" style={{ width: '400px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <h3 className="card-title">Versamento: {selectedPlan?.name}</h3>
-            <X onClick={() => setShowExecutePlan(false)} style={{ cursor: 'pointer' }} />
-          </div>
+        <ModalWrapper title={`Versamento: ${selectedPlan?.name}`} onClose={() => setShowExecutePlan(false)}>
           <form onSubmit={executePlan} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <input type="date" className="text-input" value={execPlanData.date} onChange={e => setExecPlanData({...execPlanData, date: e.target.value})} required />
             <select className="year-selector" value={execPlanData.account_id} onChange={e => setExecPlanData({...execPlanData, account_id: e.target.value})} required>
@@ -302,7 +282,7 @@ export default function InvestmentModals({
               <button type="button" onClick={() => setShowExecutePlan(false)} className="year-selector" style={{ flex: 1 }}>Annulla</button>
             </div>
           </form>
-        </div></div>
+        </ModalWrapper>
       )}
     </>
   );
