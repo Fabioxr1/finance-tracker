@@ -246,6 +246,7 @@ Questa funzione viene eseguita **ad ogni avvio** del server e garantisce che lo 
 |--------|----------|-----------|-------------|
 | GET | `/api/health` | `index.js` | Health check DB |
 | — | Design System | `index.css` | Modulare: `vars.css`, `layout.css`, `components.css` |
+| — | Security | `.git/` | Tracciamento modifiche e checkpoint di sicurezza |
 | POST | `/api/query` | `index.js` | Console SQL (esegue query libere) |
 | GET | `/api/dashboard-stats?year=` | `dashboard.js` | Stats complete per dashboard |
 | GET | `/api/accounts` | `accounts.js` | Lista conti con saldo calcolato |
@@ -330,6 +331,9 @@ Saldo = initial_balance
 > File: `backend/routes/accounts.js` (GET /), `backend/utils/balanceCalculator.js` e `backend/utils/investmentCalculations.js`
 
 ### 2. Associazione Automatica Transazione → Finanziamento
+-   **Logging Totale**: Ogni operazione sulle transazioni (singola o bulk) viene tracciata in `backend/transactions.log`.
+-   **Ricerca Avanzata**: Filtri per ID esatto e importo "fuzzy" (testuale) nella dashboard transazioni.
+-   **Integrità con Git**: Ogni sessione di lavoro è protetta da commit Git per garantire il ripristino istantaneo in caso di errori.
 Quando si crea una transazione (singola o bulk):
 1. Se `installment_id` non è impostato E la transazione ha una `description`
 2. Si cercano tutti i finanziamenti con `search_keyword` non vuota
@@ -420,3 +424,10 @@ docker exec -it reactspese_local-frontend-1 npm test
 > 📎 Per dettagli su ogni singolo file, consulta:
 > - [📦 Backend — Documentazione Dettagliata](./backend/README_TECNICO.md)
 > - [🖥 Frontend — Documentazione Dettagliata](./frontend/README_TECNICO.md)
+
+### 🔐 Sicurezza e Workflow (Regole Ferree)
+
+1.  **Backup Preventivo**: Prima di ogni modifica chirurgica, eseguiamo un `git add . && git commit -m "..."` per creare un punto di ripristino sicuro.
+2.  **Copia di Sicurezza Temporanea**: Per i file più critici (es. `TransactionTable.jsx`), creiamo una copia fisica in `backupsicirezzafile/` prima del refactoring.
+3.  **Verifica Chirurghica**: Dopo ogni modifica, confrontiamo il nuovo codice con il backup per assicurarci di non aver cancellato logiche preesistenti.
+4.  **Logging Obbligatorio**: Ogni rotta che modifica dati deve invocare `logTransaction` nel backend per mantenere la tracciabilità.
