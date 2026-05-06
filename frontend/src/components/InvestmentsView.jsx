@@ -6,6 +6,7 @@ import PACSection from './investments/PACSection';
 import PortfolioTable from './investments/PortfolioTable';
 import PortfolioChart from './investments/PortfolioChart';
 import InvestmentModals from './investments/InvestmentModals';
+import InvestmentSimulator from './investments/InvestmentSimulator';
 
 import '../index.css';
 
@@ -36,6 +37,8 @@ export default function InvestmentsView() {
     startEditTitle
   } = useInvestments();
 
+  const totalMonthlyContribution = plans.reduce((acc, p) => acc + Number(p.amount || 0), 0);
+
   return (
     <div className="investments-container">
       {/* HEADER */}
@@ -57,6 +60,12 @@ export default function InvestmentsView() {
         totalGain={stats.totalGain} 
         gainPercent={stats.gainPercent} 
         totalEstimatedTaxes={stats.totalEstimatedTaxes}
+      />
+
+      {/* SIMULATORE FUTURO */}
+      <InvestmentSimulator 
+        initialValue={stats.totalValue} 
+        monthlyContribution={totalMonthlyContribution} 
       />
 
       {/* SEZIONE PAC */}
