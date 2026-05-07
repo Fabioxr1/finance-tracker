@@ -7,15 +7,19 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Definizione dello schema per l'autocompletamento
 const dbSchema = {
-  accounts: ['id', 'name', 'type', 'initial_balance', 'is_system'],
-  categories: ['id', 'name', 'type'],
-  transactions: ['id', 'account_id', 'to_account_id', 'category_id', 'amount', 'type', 'date', 'description', 'installment_id', 'recurrence_type'],
-  tags: ['id', 'name', 'color', 'description'],
+  accounts: ['id', 'name', 'type', 'initial_balance', 'is_system', 'created_at'],
+  categories: ['id', 'name', 'type', 'created_at'],
+  transactions: ['id', 'account_id', 'to_account_id', 'category_id', 'installment_id', 'amount', 'type', 'recurrence_type', 'date', 'description', 'created_at'],
+  tags: ['id', 'name', 'color', 'description', 'created_at'],
   transaction_tags: ['transaction_id', 'tag_id'],
-  installments: ['id', 'name', 'total_amount', 'monthly_amount', 'paid_installments', 'search_keyword'],
-  investments: ['id', 'name', 'ticker', 'manual_price', 'use_manual_price'],
-  investment_transactions: ['id', 'investment_id', 'shares', 'price_per_share', 'type', 'linked_transaction_id'],
-  subscriptions: ['id', 'name', 'amount', 'day_of_month', 'active']
+  installments: ['id', 'name', 'description', 'total_amount', 'monthly_amount', 'total_installments', 'paid_installments', 'start_date', 'end_date', 'account_id', 'search_keyword', 'created_at'],
+  investments: ['id', 'name', 'isin', 'ticker', 'type', 'account_id', 'manual_price', 'use_manual_price', 'created_at'],
+  investment_transactions: ['id', 'investment_id', 'date', 'shares', 'price_per_share', 'total_amount', 'type', 'linked_transaction_id'],
+  investment_plans: ['id', 'name', 'investment_id', 'amount', 'created_at'],
+  deadlines: ['id', 'title', 'due_date', 'amount', 'category_id', 'status', 'description', 'is_recurring', 'created_at'],
+  subscriptions: ['id', 'name', 'amount', 'category_id', 'account_id', 'day_of_month', 'active_months', 'active', 'created_at'],
+  bulk_operations: ['id', 'operation_type', 'created_at'],
+  bulk_operations_data: ['id', 'bulk_op_id', 'transaction_id', 'old_data', 'created_at']
 };
 
 export default function SqlConsoleView() {
