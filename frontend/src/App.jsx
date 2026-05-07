@@ -27,6 +27,7 @@ import DeadlinesView from './components/DeadlinesView';
 import SubscriptionsView from './components/SubscriptionsView';
 import TagsView from './components/TagsView';
 import TagStats from './components/TagStats';
+import AppFooter from './components/common/AppFooter';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -115,6 +116,8 @@ function App() {
         {activeTab === 'analisi-tag' && <TagStats />}
         {activeTab === 'console' && <SqlConsoleView />}
         {activeTab === 'config' && <ConfigView />}
+        
+        <AppFooter />
       </main>
     </div>
   );
