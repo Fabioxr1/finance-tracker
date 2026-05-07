@@ -23,6 +23,7 @@ describe('CSV Parser Utility', () => {
     
     expect(result.transactions).toHaveLength(1);
     expect(result.transactions[0]).toEqual({
+      id: null,
       date: '2024-05-10',
       type: 'expense',
       amount: 25.50,

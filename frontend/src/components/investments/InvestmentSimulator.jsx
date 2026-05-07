@@ -48,7 +48,7 @@ export default function InvestmentSimulator({ initialValue, monthlyContribution 
         </div>
       </div>
 
-      <div className="dashboard-grid" style={{ gridTemplateColumns: '1fr 2fr', gap: '30px' }}>
+      <div className="simulator-grid">
         {/* CONTROLLI */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
           <div className="form-group">
