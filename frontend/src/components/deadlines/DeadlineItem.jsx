@@ -1,73 +1,132 @@
 import { Calendar, AlertCircle, CheckCircle, Trash2, Clock, RotateCcw, Edit2 } from 'lucide-react';
+import ActionCard from '../common/ActionCard';
 
 export default function DeadlineItem({ deadline, onUpdateStatus, onDelete, onEdit }) {
-  const isOverdue = new Date(deadline.due_date) < new Date() && deadline.status === 'pending';
-  const isUpcoming = !isOverdue && new Date(deadline.due_date) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const isPaid = deadline.status === 'paid';
+  const isOverdue = !isPaid && new Date(deadline.due_date) < new Date();
+  const isUpcoming = !isPaid && !isOverdue && new Date(deadline.due_date) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  // Colore basato sullo stato
+  const accentColor = isPaid 
+    ? 'var(--accent-green)' 
+    : isOverdue 
+      ? 'var(--error-color)' 
+      : isUpcoming 
+        ? 'var(--warning-color)' 
+        : 'var(--accent-blue)';
+
+  // Icona basata sullo stato
+  const Icon = isPaid ? CheckCircle : isOverdue ? AlertCircle : Clock;
 
   return (
-    <div className={`card deadline-item ${deadline.status} ${isOverdue ? 'overdue' : ''}`} style={{ 
-      borderLeft: deadline.status === 'paid' ? '4px solid var(--accent-green)' : isOverdue ? '4px solid var(--error-color)' : isUpcoming ? '4px solid var(--warning-color)' : '4px solid var(--border-color)',
-      marginBottom: '10px'
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <div className="deadline-icon" style={{ 
-            padding: '10px', 
-            borderRadius: '10px', 
-            background: deadline.status === 'paid' ? 'rgba(63, 185, 80, 0.1)' : isOverdue ? 'rgba(248, 81, 73, 0.1)' : 'rgba(47, 129, 247, 0.1)',
-            color: deadline.status === 'paid' ? 'var(--accent-green)' : isOverdue ? 'var(--error-color)' : 'var(--accent-blue)'
-          }}>
-            {deadline.status === 'paid' ? <CheckCircle size={20} /> : isOverdue ? <AlertCircle size={20} /> : <Clock size={20} />}
-          </div>
-          <div>
-            <h4 style={{ margin: 0, fontSize: '1.1em', textDecoration: deadline.status === 'paid' ? 'line-through' : 'none' }}>{deadline.title}</h4>
-            <div style={{ display: 'flex', gap: '15px', marginTop: '5px', fontSize: '0.85em', color: 'var(--text-secondary)' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Calendar size={14} /> {new Date(deadline.due_date).toLocaleDateString('it-IT')}
-              </span>
-              {deadline.amount && <span>€ {Number(deadline.amount).toFixed(2)}</span>}
-              {deadline.category_name && <span className="tx-card-category">{deadline.category_name}</span>}
-            </div>
-          </div>
+    <ActionCard
+      title={deadline.title}
+      subtitle={
+        <div style={{ display: 'flex', gap: '10px', marginTop: '4px' }}>
+          {deadline.category_name && <span className="tx-card-category">{deadline.category_name}</span>}
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85em', color: 'var(--text-secondary)' }}>
+            <Calendar size={12} /> {new Date(deadline.due_date).toLocaleDateString('it-IT')}
+          </span>
         </div>
-        
-        <div style={{ display: 'flex', gap: '10px' }}>
-          {deadline.status === 'pending' ? (
+      }
+      icon={Icon}
+      accentColor={accentColor}
+      accentSide="left"
+      isActive={!isPaid}
+      amount={deadline.amount ? `€ ${Number(deadline.amount).toFixed(2)}` : undefined}
+      amountStyle={{ textDecoration: isPaid ? 'line-through' : 'none', opacity: isPaid ? 0.6 : 1 }}
+      actions={
+        <>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {deadline.status === 'pending' ? (
+              <button 
+                onClick={() => onUpdateStatus(deadline.id, 'paid')}
+                title="Segna come pagato"
+                style={{ 
+                  borderRadius: '20px', 
+                  padding: '6px 14px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '6px', 
+                  fontSize: '0.75rem', 
+                  fontWeight: '700',
+                  background: 'rgba(63, 185, 80, 0.1)',
+                  color: 'var(--accent-green)',
+                  border: '1px solid rgba(63, 185, 80, 0.2)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent-green)'; e.currentTarget.style.color = 'white'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(63, 185, 80, 0.1)'; e.currentTarget.style.color = 'var(--accent-green)'; }}
+              >
+                <CheckCircle size={14} /> PAGA
+              </button>
+            ) : (
+              <button 
+                onClick={() => onUpdateStatus(deadline.id, 'pending')}
+                title="Ripristina come da pagare"
+                style={{ 
+                  borderRadius: '20px', 
+                  padding: '6px 14px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '6px', 
+                  fontSize: '0.75rem',
+                  fontWeight: '600',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  color: 'var(--text-secondary)',
+                  border: '1px solid var(--border-color)',
+                  cursor: 'pointer'
+                }}
+              >
+                <RotateCcw size={14} /> RIPRISTINA
+              </button>
+            )}
+            
             <button 
-              onClick={() => onUpdateStatus(deadline.id, 'paid')}
-              className="action-btn-green"
-              title="Segna come pagato"
+              onClick={() => onEdit(deadline)}
+              title="Modifica"
+              style={{ 
+                padding: '8px', 
+                borderRadius: '50%', 
+                background: 'rgba(255,255,255,0.05)', 
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-secondary)',
+                cursor: 'pointer',
+                display: 'flex'
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent-blue)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-color)'}
             >
-              <CheckCircle size={16} />
+              <Edit2 size={16} />
             </button>
-          ) : (
-            <button 
-              onClick={() => onUpdateStatus(deadline.id, 'pending')}
-              className="action-btn-gray"
-              title="Ripristina come da pagare"
-            >
-              <RotateCcw size={16} />
-            </button>
-          )}
-          
-          <button 
-            onClick={() => onEdit(deadline)}
-            className="action-btn-gray"
-            title="Modifica"
-          >
-            <Edit2 size={16} />
-          </button>
+          </div>
 
           <button 
             onClick={() => onDelete(deadline.id)}
-            className="action-btn-gray"
-            style={{ color: 'var(--error-color)' }}
             title="Elimina"
+            style={{ 
+              padding: '8px', 
+              borderRadius: '50%', 
+              background: 'rgba(248, 81, 73, 0.05)', 
+              border: '1px solid rgba(248, 81, 73, 0.1)',
+              color: 'var(--accent-red)',
+              cursor: 'pointer',
+              display: 'flex'
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent-red)'; e.currentTarget.style.color = 'white'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(248, 81, 73, 0.05)'; e.currentTarget.style.color = 'var(--accent-red)'; }}
           >
             <Trash2 size={16} />
           </button>
-        </div>
-      </div>
-    </div>
+        </>
+      }
+    >
+      {deadline.description && (
+        <p style={{ fontSize: '0.85em', color: 'var(--text-secondary)', margin: '10px 0 0 0', fontStyle: 'italic' }}>
+          {deadline.description}
+        </p>
+      )}
+    </ActionCard>
   );
 }

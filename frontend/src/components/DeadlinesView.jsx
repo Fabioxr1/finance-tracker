@@ -187,25 +187,51 @@ export default function DeadlinesView() {
           {totalPages > 1 && (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginTop: '30px', padding: '20px 0' }}>
               <button 
-                className="year-selector" 
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(prev => prev - 1)}
-                style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.5 : 1 }}
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  padding: '8px 20px',
+                  borderRadius: '12px',
+                  background: currentPage === 1 ? 'transparent' : 'rgba(255,255,255,0.05)',
+                  border: '1px solid var(--border-color)',
+                  color: currentPage === 1 ? 'var(--text-secondary)' : 'var(--text-primary)',
+                  cursor: currentPage === 1 ? 'not-allowed' : 'pointer', 
+                  opacity: currentPage === 1 ? 0.3 : 1,
+                  transition: 'all 0.2s',
+                  fontWeight: '600',
+                  fontSize: '0.9rem'
+                }}
               >
-                <ChevronLeft size={18} /> Precedente
+                <ChevronLeft size={18} /> PRECEDENTE
               </button>
               
-              <span style={{ fontWeight: '600', color: 'var(--text-secondary)' }}>
-                Pagina {currentPage} di {totalPages}
+              <span style={{ fontWeight: '700', color: 'var(--accent-blue)', fontSize: '0.95rem' }}>
+                PAGINA {currentPage} <span style={{ color: 'var(--text-secondary)', fontWeight: '400', margin: '0 5px' }}>DI</span> {totalPages}
               </span>
               
               <button 
-                className="year-selector" 
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(prev => prev + 1)}
-                style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', opacity: currentPage === totalPages ? 0.5 : 1 }}
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  padding: '8px 20px',
+                  borderRadius: '12px',
+                  background: currentPage === totalPages ? 'transparent' : 'rgba(255,255,255,0.05)',
+                  border: '1px solid var(--border-color)',
+                  color: currentPage === totalPages ? 'var(--text-secondary)' : 'var(--text-primary)',
+                  cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', 
+                  opacity: currentPage === totalPages ? 0.3 : 1,
+                  transition: 'all 0.2s',
+                  fontWeight: '600',
+                  fontSize: '0.9rem'
+                }}
               >
-                Successiva <ChevronRight size={18} />
+                SUCCESSIVA <ChevronRight size={18} />
               </button>
             </div>
           )}
