@@ -105,6 +105,14 @@ export default function TransactionsView() {
               <option value="" disabled>Sposta in Categoria</option>
               {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
+            <select className="year-selector" style={{ border: '1px solid var(--accent-blue)', background: 'rgba(47, 129, 247, 0.05)' }} onChange={(e) => handleBulkUpdate({ tag_id: e.target.value })} value="">
+              <option value="" disabled>Aggiungi Tag #</option>
+              {availableTags.map(tag => <option key={tag.id} value={tag.id}>#{tag.name}</option>)}
+            </select>
+            <select className="year-selector" style={{ border: '1px solid var(--accent-red)', background: 'rgba(248, 81, 73, 0.05)' }} onChange={(e) => handleBulkUpdate({ remove_tag_id: e.target.value })} value="">
+              <option value="" disabled>Rimuovi Tag X</option>
+              {availableTags.map(tag => <option key={tag.id} value={tag.id}>#{tag.name}</option>)}
+            </select>
             <button onClick={handleBulkDelete} className="bulk-btn-delete">Elimina Selezionate</button>
             <button onClick={() => setSelectedIds([])} className="bulk-btn-cancel">Deseleziona</button>
           </div>
