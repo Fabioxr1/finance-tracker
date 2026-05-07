@@ -33,3 +33,4 @@ ollama_data/
 scratch/
 *.sql
 *.xlsx
+deploy-code.sh
