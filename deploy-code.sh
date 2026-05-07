@@ -23,16 +23,18 @@ trap cleanup EXIT
 echo "🔑 1. Apertura connessione sicura (inserisci la password)..."
 ssh -M -fN -S "$SSH_SOCKET" -o ControlPersist=600 "$VM_USER@$VM_IP"
 
-# 2. Trasferimento file via SCP usando il socket (Niente password)
-echo "📦 2. Trasferimento file alla VM..."
-scp -o ControlPath="$SSH_SOCKET" -r ./backend ./frontend ./docker-compose.yml "$VM_USER@$VM_IP:$VM_PATH/"
+# 2. Trasferimento file via TAR (Esclude node_modules e .git, funziona senza rsync)
+echo "📦 2. Trasferimento file alla VM (compresso e pulito)..."
+tar czf - --exclude='node_modules' --exclude='.git' --exclude='dist' ./backend ./frontend ./docker-compose.yml | \
+    ssh -S "$SSH_SOCKET" "$VM_USER@$VM_IP" "cd $VM_PATH && tar xzf -"
 
 # 3. Esecuzione comandi remoti raggruppati (Niente password)
 echo "⚙️ 3. Configurazione e Riavvio Docker..."
 ssh -S "$SSH_SOCKET" "$VM_USER@$VM_IP" "
-    echo 'VITE_API_URL=http://$VM_IP:5000/api' > $VM_PATH/frontend/.env && \
     cd $VM_PATH && \
-    docker compose up --build -d
+    rm -rf frontend/node_modules backend/node_modules && \
+    echo 'VITE_API_URL=http://$VM_IP:5000/api' > $VM_PATH/frontend/.env && \
+    docker compose build --no-cache && docker compose up -d --force-recreate --renew-anon-volumes
 "
 
 echo "------------------------------------------------"
