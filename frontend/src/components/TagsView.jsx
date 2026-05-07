@@ -83,7 +83,7 @@ export default function TagsView() {
     <div>
       <h2 className="chart-title" style={{ marginBottom: '20px' }}>Gestione Tag</h2>
       
-      <DashboardGrid minWidth="220px">
+      <DashboardGrid>
         {tags.map(tag => (
           <div className="card" key={tag.id} style={{ borderLeft: `4px solid ${tag.color}`, padding: '15px' }}>
             {editingId === tag.id ? (

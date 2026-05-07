@@ -3,7 +3,7 @@ import DashboardGrid from '../common/DashboardGrid';
 
 export default function StatsCards({ data }) {
   return (
-    <DashboardGrid minWidth="240px">
+    <DashboardGrid>
       <div className="card" style={{ borderTop: '4px solid var(--accent-blue)' }}>
         <div className="card-header">
           <h3 className="card-title">Patrimonio Netto</h3>

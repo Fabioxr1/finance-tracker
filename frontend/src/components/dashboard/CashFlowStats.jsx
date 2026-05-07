@@ -8,7 +8,7 @@ export default function CashFlowStats({ data, year }) {
   };
 
   return (
-    <DashboardGrid minWidth="300px">
+    <DashboardGrid>
       <div className="card">
         <div className="card-header">
           <h3 className="card-title">Entrate Annuali</h3>

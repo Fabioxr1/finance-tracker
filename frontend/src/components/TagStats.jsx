@@ -139,7 +139,7 @@ export default function TagStats() {
         </div>
       </div>
 
-      <DashboardGrid minWidth="100%">
+      <DashboardGrid isFullWidth={true}>
         {/* Grafico a Barre */}
         <div className="card">
           <h3 className="card-title" style={{ marginBottom: '20px' }}>Distribuzione Spesa per Tag</h3>

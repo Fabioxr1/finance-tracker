@@ -3,7 +3,7 @@ import DashboardGrid from '../common/DashboardGrid';
 
 export default function InstallmentStats({ totalDebt, monthlyCommitment, activeCount, freedomDate }) {
   return (
-    <DashboardGrid minWidth="280px">
+    <DashboardGrid>
       <div className="card" style={{ borderTop: '4px solid var(--accent-red)' }}>
         <div className="card-header">
           <h3 className="card-title">Debito Residuo Totale</h3>

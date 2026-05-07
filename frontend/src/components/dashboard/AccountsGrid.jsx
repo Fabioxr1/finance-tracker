@@ -6,7 +6,7 @@ export default function AccountsGrid({ accounts }) {
   return (
     <>
       <h3 className="chart-title" style={{ marginBottom: '15px' }}>Situazione Liquidità per Conto</h3>
-      <DashboardGrid minWidth="280px">
+      <DashboardGrid>
         {accounts.map((acc, idx) => (
           <div key={idx} className="card account-card" style={{ padding: '15px', position: 'relative', overflow: 'hidden' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>

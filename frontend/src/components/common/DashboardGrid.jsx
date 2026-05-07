@@ -1,28 +1,20 @@
 /**
- * Componente comune per le griglie della dashboard.
- * Gestisce il layout responsive grid-template-columns in base alla larghezza minima specificata.
+ * Componente contenitore standard per la griglia della dashboard.
+ * Utilizza le impostazioni CSS globali (.dashboard-grid).
  */
 export default function DashboardGrid({ 
   children, 
-  minWidth = '250px', 
   className = '', 
-  style = {},
-  gap = '20px',
-  marginBottom = '30px'
+  isFullWidth = false,
+  style = {} 
 }) {
   const combinedStyle = {
-    display: 'grid',
-    gap,
-    marginBottom,
-    gridTemplateColumns: `repeat(auto-fit, minmax(${minWidth}, 1fr))`,
+    ...(isFullWidth ? { gridTemplateColumns: '1fr' } : {}),
     ...style
   };
 
   return (
-    <div 
-      className={`dashboard-grid ${className}`} 
-      style={combinedStyle}
-    >
+    <div className={`dashboard-grid ${className}`} style={combinedStyle}>
       {children}
     </div>
   );

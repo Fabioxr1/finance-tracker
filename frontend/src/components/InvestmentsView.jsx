@@ -91,7 +91,7 @@ export default function InvestmentsView() {
       />
 
       {/* PORTFOLIO E DISTRIBUZIONE */}
-      <DashboardGrid minWidth="300px">
+      <DashboardGrid>
         <div style={{ gridColumn: 'span 1' }}>
           <PortfolioTable 
             portfolio={portfolio} 

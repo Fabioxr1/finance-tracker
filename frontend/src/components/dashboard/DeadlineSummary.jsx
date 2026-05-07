@@ -81,7 +81,7 @@ export default function DeadlineSummary() {
         }}></div>
       </div>
 
-      <DashboardGrid minWidth="300px" marginBottom="0">
+      <DashboardGrid style={{ marginBottom: 0 }}>
         {/* Riquadro 1: Totale Spese Fisse Annuali */}
         <div className="card" style={{ 
           background: 'linear-gradient(135deg, rgba(163, 113, 247, 0.1) 0%, rgba(47, 129, 247, 0.05) 100%)',
