@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Tag } from 'lucide-react';
+import { Plus, Tag } from 'lucide-react';
 import DashboardGrid from './common/DashboardGrid';
+import PageHeader from './common/PageHeader';
+import FormInput from './common/FormInput';
+import FormSelect from './common/FormSelect';
+import AppButton from './common/AppButton';
+import CategoryItem from './config/CategoryItem';
 import '../index.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -52,36 +57,53 @@ export default function ConfigView() {
     }
   };
 
+  const handleUpdateCategory = async (id, updatedData) => {
+    try {
+      const res = await fetch(`${API_URL}/categories/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+      });
+      if (!res.ok) throw new Error("Errore aggiornamento categoria");
+      fetchCategories();
+      return true;
+    } catch (err) {
+      console.error("Errore aggiornamento categoria:", err);
+      alert("Errore nell'aggiornamento della categoria.");
+      return false;
+    }
+  };
+
   const incomes = categories.filter(c => c.type === 'income');
   const expenses = categories.filter(c => c.type === 'expense');
 
   return (
     <div>
-      <h2 className="chart-title" style={{marginBottom: '20px'}}>Configurazione Categorie</h2>
+      <PageHeader 
+        title="Configurazione Categorie" 
+        description="Gestisci le categorie per le tue entrate e uscite."
+      />
 
       <div className="card" style={{marginBottom: '30px'}}>
         <h3 className="card-title">Aggiungi nuova Categoria</h3>
         <form onSubmit={addCategory} style={{ display: 'flex', gap: '15px', marginTop: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <select 
-            className="year-selector"
+          <FormSelect 
             value={newCat.type}
-            onChange={e => setNewCat({...newCat, type: e.target.value})}
-          >
-            <option value="expense">Spesa (Uscita)</option>
-            <option value="income">Entrata</option>
-          </select>
-          <input 
-            type="text" 
+            onChange={val => setNewCat({...newCat, type: val})}
+            options={[
+              { value: 'expense', label: 'Spesa (Uscita)' },
+              { value: 'income', label: 'Entrata' }
+            ]}
+            style={{ width: '200px' }}
+          />
+          <FormInput 
             placeholder="Nome (es. Supermercato, Affitto...)" 
-            className="year-selector"
-            style={{ flex: 1, minWidth: '200px' }}
+            containerStyle={{ flex: 1, minWidth: '200px' }}
             value={newCat.name}
-            onChange={e => setNewCat({...newCat, name: e.target.value})}
+            onChange={val => setNewCat({...newCat, name: val})}
             required
           />
-          <button type="submit" className="year-selector" style={{ background: 'var(--accent-blue)', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer'}}>
-            <Plus size={18} /> Aggiungi
-          </button>
+          <AppButton type="submit" icon={Plus}>Aggiungi</AppButton>
         </form>
       </div>
 
@@ -91,16 +113,16 @@ export default function ConfigView() {
             <h3 className="card-title">Categorie Uscite</h3>
             <Tag className="card-icon value-negative" size={20} />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '10px' }}>
             {expenses.map(c => (
-              <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: 'var(--bg-hover)', borderRadius: '8px' }}>
-                <span>{c.name}</span>
-                <button onClick={() => deleteCategory(c.id)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-red)', cursor: 'pointer' }}>
-                   <Trash2 size={16} />
-                </button>
-              </div>
+              <CategoryItem 
+                key={c.id} 
+                category={c} 
+                onUpdate={handleUpdateCategory} 
+                onDelete={deleteCategory} 
+              />
             ))}
-            {expenses.length === 0 && <span style={{ color: 'var(--text-secondary)' }}>Nessuna categoria</span>}
+            {expenses.length === 0 && <span style={{ color: 'var(--text-secondary)', padding: '10px' }}>Nessuna categoria</span>}
           </div>
         </div>
 
@@ -109,16 +131,16 @@ export default function ConfigView() {
             <h3 className="card-title">Categorie Entrate</h3>
             <Tag className="card-icon value-positive" size={20} />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '10px' }}>
             {incomes.map(c => (
-              <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: 'var(--bg-hover)', borderRadius: '8px' }}>
-                <span>{c.name}</span>
-                <button onClick={() => deleteCategory(c.id)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-red)', cursor: 'pointer' }}>
-                   <Trash2 size={16} />
-                </button>
-              </div>
+              <CategoryItem 
+                key={c.id} 
+                category={c} 
+                onUpdate={handleUpdateCategory} 
+                onDelete={deleteCategory} 
+              />
             ))}
-            {incomes.length === 0 && <span style={{ color: 'var(--text-secondary)' }}>Nessuna categoria</span>}
+            {incomes.length === 0 && <span style={{ color: 'var(--text-secondary)', padding: '10px' }}>Nessuna categoria</span>}
           </div>
         </div>
       </DashboardGrid>

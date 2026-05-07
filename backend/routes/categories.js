@@ -36,4 +36,20 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// 3.3 PUT Category (Update)
+router.put('/:id', async (req, res) => {
+  const { name, type } = req.body;
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      'UPDATE categories SET name = $1, type = $2 WHERE id = $3 RETURNING *',
+      [name, type, id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: "Categoria non trovata" });
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
