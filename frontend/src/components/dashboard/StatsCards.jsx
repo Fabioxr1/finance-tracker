@@ -34,6 +34,7 @@ export default function StatsCards({ data }) {
         title="Debiti Residui"
         subtitle="Totale finanziamenti"
         icon={TrendingUp}
+        iconStyle={{ transform: 'scaleY(-1)' }}
         accentColor="var(--accent-red)"
         amount={`€ ${(data.totalDebt || 0).toLocaleString('it-IT', { minimumFractionDigits: 2 })}`}
         amountClassName="value-negative"

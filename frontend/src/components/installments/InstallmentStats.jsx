@@ -28,7 +28,7 @@ export default function InstallmentStats({ totalDebt, monthlyCommitment, activeC
         icon={Calendar}
         accentColor="var(--accent-green)"
         amount={freedomDate ? new Date(freedomDate).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' }) : '---'}
-        amountClassName="text-capitalize"
+        amountStyle={{ textTransform: 'capitalize' }}
       />
     </DashboardGrid>
   );

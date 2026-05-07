@@ -18,7 +18,9 @@ export default function ActionCard({
   children,
   className = '',
   onClick,
-  style = {}
+  style = {},
+  iconStyle = {},
+  amountStyle = {}
 }) {
   const cardStyles = {
     ...style,
@@ -48,7 +50,7 @@ export default function ActionCard({
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <Icon size={20} color={accentColor || 'var(--text-secondary)'} />
+              <Icon size={20} color={accentColor || 'var(--text-secondary)'} style={iconStyle} />
             </div>
           )}
           <div>
@@ -60,7 +62,7 @@ export default function ActionCard({
 
       {amount !== undefined && (
         <div style={{ marginBottom: children ? '15px' : 0 }}>
-          <div className={`card-value ${amountClassName}`} style={{ fontSize: '1.6rem' }}>
+          <div className={`card-value ${amountClassName}`} style={{ fontSize: '1.6rem', ...amountStyle }}>
             {amount}
           </div>
           {amountLabel && <div className="card-subtitle">{amountLabel}</div>}
