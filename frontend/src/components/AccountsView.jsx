@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Wallet, Plus, Trash2, Edit2, X, Check } from 'lucide-react';
 import DashboardGrid from './common/DashboardGrid';
+import ActionCard from './common/ActionCard';
 import '../index.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -84,69 +85,73 @@ export default function AccountsView() {
         </div>
       ) : (
         <DashboardGrid>
-          {accounts.map(acc => (
-            <div className="card" key={acc.id}>
-              {editingId === acc.id ? (
-                // FORM DI MODIFICA
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <input 
-                    type="text"
-                    className="text-input" 
-                    value={editAccount.name} 
-                    placeholder="Nome"
-                    onChange={e => setEditAccount({...editAccount, name: e.target.value})} 
-                  />
-                  <input 
-                    type="text" 
-                    placeholder="Tipo (es. Conto Corrente)" 
-                    className="text-input"
-                    value={editAccount.type}
-                    onChange={e => setEditAccount({...editAccount, type: e.target.value})}
-                    required
-                  />
-                  <input 
-                    type="number" 
-                    step="0.01" 
-                    placeholder="Saldo Iniziale (Giorno 0) €"
-                    className="text-input" 
-                    value={editAccount.initial_balance} 
-                    onChange={e => setEditAccount({...editAccount, initial_balance: parseFloat(e.target.value) || 0})} 
-                  />
-                  <input 
-                    type="password" 
-                    placeholder="Password Admin (per sbloccare saldo)"
-                    className="text-input" 
-                    value={editAccount.admin_password || ''} 
-                    onChange={e => setEditAccount({...editAccount, admin_password: e.target.value})} 
-                  />
-                  <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                    <button onClick={saveEdit} style={{ flex: 1, background: 'var(--accent-green)', color: 'white', border: 'none', padding: '8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center'}}><Check size={18} /></button>
-                    <button onClick={() => setEditingId(null)} style={{ flex: 1, background: 'var(--border-color)', color: 'white', border: 'none', padding: '8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center'}}><X size={18} /></button>
+          {accounts.map(acc => {
+            const isEditing = editingId === acc.id;
+            
+            return (
+              <ActionCard
+                key={acc.id}
+                title={isEditing ? 'Modifica Conto' : acc.name}
+                icon={Wallet}
+                accentColor="var(--accent-blue)"
+                isActive={true}
+                amount={!isEditing ? `€ ${Number(acc.current_balance).toFixed(2)}` : undefined}
+                amountClassName={acc.current_balance < 0 ? 'value-negative' : 'value-positive'}
+                actions={!isEditing ? (
+                  <div style={{ display: 'flex', gap: '15px', width: '100%', justifyContent: 'flex-end' }}>
+                    <Edit2 size={16} style={{ cursor: 'pointer', color: 'var(--text-secondary)' }} onClick={() => startEdit(acc)} />
+                    <Trash2 size={16} style={{ cursor: 'pointer', color: 'var(--accent-red)' }} onClick={() => deleteAccount(acc.id)} />
                   </div>
-                </div>
-              ) : (
-                // VISUALIZZAZIONE NORMALE
-                <>
-                  <div className="card-header">
-                    <h3 className="card-title">{acc.name}</h3>
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                      <Edit2 size={16} style={{ cursor: 'pointer', color: 'var(--text-secondary)' }} onClick={() => startEdit(acc)} />
-                      <Trash2 size={16} style={{ cursor: 'pointer', color: 'var(--accent-red)' }} onClick={() => deleteAccount(acc.id)} />
+                ) : null}
+              >
+                {isEditing ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <input 
+                      type="text"
+                      className="text-input" 
+                      value={editAccount.name} 
+                      placeholder="Nome"
+                      onChange={e => setEditAccount({...editAccount, name: e.target.value})} 
+                    />
+                    <input 
+                      type="text" 
+                      placeholder="Tipo (es. Conto Corrente)" 
+                      className="text-input"
+                      value={editAccount.type}
+                      onChange={e => setEditAccount({...editAccount, type: e.target.value})}
+                      required
+                    />
+                    <input 
+                      type="number" 
+                      step="0.01" 
+                      placeholder="Saldo Iniziale (Giorno 0) €"
+                      className="text-input" 
+                      value={editAccount.initial_balance} 
+                      onChange={e => setEditAccount({...editAccount, initial_balance: parseFloat(e.target.value) || 0})} 
+                    />
+                    <input 
+                      type="password" 
+                      placeholder="Password Admin (per sbloccare saldo)"
+                      className="text-input" 
+                      value={editAccount.admin_password || ''} 
+                      onChange={e => setEditAccount({...editAccount, admin_password: e.target.value})} 
+                    />
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                      <button onClick={saveEdit} style={{ flex: 1, background: 'var(--accent-green)', color: 'white', border: 'none', padding: '8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center'}}><Check size={18} /></button>
+                      <button onClick={() => setEditingId(null)} style={{ flex: 1, background: 'var(--border-color)', color: 'white', border: 'none', padding: '8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center'}}><X size={18} /></button>
                     </div>
                   </div>
-                  <div className={`card-value ${acc.current_balance < 0 ? 'value-negative' : 'value-positive'}`}>
-                    € {Number(acc.current_balance).toFixed(2)}
-                  </div>
+                ) : (
                   <div className="card-subtitle">
                     Tipo: {acc.type} <br/>
                     <span style={{opacity: 0.6, fontSize: '0.85em', display: 'inline-block', marginTop: '4px'}}>
                       Saldo di partenza: € {Number(acc.initial_balance).toFixed(2)}
                     </span>
                   </div>
-                </>
-              )}
-            </div>
-          ))}
+                )}
+              </ActionCard>
+            );
+          })}
         </DashboardGrid>
       )}
 

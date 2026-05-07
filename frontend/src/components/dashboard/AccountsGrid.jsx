@@ -1,4 +1,5 @@
 import DashboardGrid from '../common/DashboardGrid';
+import ActionCard from '../common/ActionCard';
 
 export default function AccountsGrid({ accounts }) {
   if (!accounts || accounts.length === 0) return null;
@@ -8,12 +9,14 @@ export default function AccountsGrid({ accounts }) {
       <h3 className="chart-title" style={{ marginBottom: '15px' }}>Situazione Liquidità per Conto</h3>
       <DashboardGrid>
         {accounts.map((acc, idx) => (
-          <div key={idx} className="card account-card" style={{ padding: '15px', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-              <span style={{ fontWeight: 'bold', fontSize: '1.1em', color: 'var(--accent-blue)' }}>{acc.name}</span>
-              <span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>€ {(acc.balance || 0).toLocaleString('it-IT', { minimumFractionDigits: 2 })}</span>
-            </div>
-
+          <ActionCard
+            key={idx}
+            title={acc.name}
+            accentColor="var(--accent-blue)"
+            accentSide="left"
+            amount={`€ ${(acc.balance || 0).toLocaleString('it-IT', { minimumFractionDigits: 2 })}`}
+            style={{ padding: '15px' }}
+          >
             {/* Sezione Entrate/Uscite Dirette */}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85em', marginBottom: '8px' }}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -47,7 +50,7 @@ export default function AccountsGrid({ accounts }) {
                 </>
               )}
             </div>
-          </div>
+          </ActionCard>
         ))}
       </DashboardGrid>
     </>

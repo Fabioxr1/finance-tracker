@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Trash2, Calendar, CreditCard, Tag, Check, X, Bell, BellOff, RefreshCw, Edit2, TrendingDown } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import ModalWrapper from './common/ModalWrapper';
+import ActionCard from './common/ActionCard';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -147,24 +148,22 @@ export default function SubscriptionsView() {
           </p>
         </div>
         <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-          <div className="card" style={{ padding: '10px 20px', flexDirection: 'row', gap: '15px', alignItems: 'center', marginBottom: 0 }}>
-             <div style={{ background: 'rgba(248, 81, 73, 0.1)', padding: '8px', borderRadius: '50%' }}>
-                <RefreshCw size={20} color="var(--accent-red)" />
-             </div>
-             <div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Uscita Mensile ({MONTHS[currentMonth-1].name})</div>
-                <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>€{totalMonthlyCurrent.toFixed(2)}</div>
-             </div>
-          </div>
-          <div className="card" style={{ padding: '10px 20px', flexDirection: 'row', gap: '15px', alignItems: 'center', marginBottom: 0 }}>
-             <div style={{ background: 'rgba(47, 129, 247, 0.1)', padding: '8px', borderRadius: '50%' }}>
-                <TrendingDown size={20} color="var(--accent-blue)" />
-             </div>
-             <div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Totale Annuale</div>
-                <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>€{totalAnnual.toFixed(2)}</div>
-             </div>
-          </div>
+          <ActionCard 
+            title="Uscita Mensile"
+            subtitle={MONTHS[currentMonth-1].name}
+            icon={RefreshCw}
+            accentColor="var(--accent-red)"
+            amount={`€${totalMonthlyCurrent.toFixed(2)}`}
+            style={{ marginBottom: 0, padding: '10px 20px' }}
+          />
+          <ActionCard 
+            title="Totale Annuale"
+            subtitle="Stima 12 mesi"
+            icon={TrendingDown}
+            accentColor="var(--accent-blue)"
+            amount={`€${totalAnnual.toFixed(2)}`}
+            style={{ marginBottom: 0, padding: '10px 20px' }}
+          />
           <button className="add-title-btn" onClick={() => { setEditingId(null); setNewSub({ name: '', amount: '', category_id: categories[0]?.id, account_id: accounts[0]?.id, day_of_month: 1, active: true, active_months: [1,2,3,4,5,6,7,8,9,10,11,12] }); setIsModalOpen(true); }}>
             <Plus size={20} /> Nuovo
           </button>
@@ -235,31 +234,72 @@ export default function SubscriptionsView() {
           </div>
         ) : (
           subscriptions.map(sub => (
-            <div key={sub.id} className={`card ${!sub.active ? 'inactive' : ''}`} style={{ 
-              position: 'relative', 
-              borderLeft: sub.active ? '5px solid var(--accent-blue)' : '5px solid var(--text-secondary)',
-              opacity: sub.active ? 1 : 0.7,
-              transition: 'all 0.3s ease'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>{sub.name}</h3>
-                  <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-                    <span className="tx-card-category" style={{ fontSize: '0.65rem' }}>{sub.category_name}</span>
-                    <span className="tx-card-category" style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)' }}>
-                      Giorno {sub.day_of_month}
-                    </span>
-                  </div>
+            <ActionCard
+              key={sub.id}
+              title={sub.name}
+              subtitle={
+                <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                  <span className="tx-card-category" style={{ fontSize: '0.65rem' }}>{sub.category_name}</span>
+                  <span className="tx-card-category" style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)' }}>
+                    Giorno {sub.day_of_month}
+                  </span>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.5rem', fontWeight: '800', color: sub.active ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                    €{Number(sub.amount).toFixed(2)}
+              }
+              amount={`€${Number(sub.amount).toFixed(2)}`}
+              amountLabel="/ mese"
+              accentColor={sub.active ? 'var(--accent-blue)' : 'var(--text-secondary)'}
+              accentSide="left"
+              isActive={sub.active}
+              actions={
+                <>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button 
+                      onClick={() => toggleActive(sub)}
+                      style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '8px', 
+                        background: sub.active ? 'rgba(47, 129, 247, 0.1)' : 'rgba(139, 148, 158, 0.1)', 
+                        color: sub.active ? 'var(--accent-blue)' : 'var(--text-secondary)',
+                        border: 'none',
+                        padding: '6px 12px',
+                        borderRadius: '20px',
+                        fontSize: '0.8rem',
+                        fontWeight: '600',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {sub.active ? <Bell size={14} /> : <BellOff size={14} />}
+                      {sub.active ? 'Attivo' : 'Sospeso'}
+                    </button>
+                    <button 
+                      onClick={() => startEdit(sub)}
+                      style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}
+                    >
+                      <Edit2 size={16} />
+                    </button>
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: '500' }}>/ mese</div>
-                </div>
-              </div>
-
-              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px', borderRadius: '8px', marginBottom: '15px' }}>
+                  
+                  <button 
+                    onClick={() => deleteSub(sub.id)} 
+                    style={{ 
+                      background: 'none', 
+                      border: 'none', 
+                      color: 'var(--text-secondary)', 
+                      cursor: 'pointer', 
+                      padding: '8px',
+                      borderRadius: '50%',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-red)'}
+                    onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </>
+              }
+            >
+              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px', borderRadius: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '8px' }}>
                   <CreditCard size={14} /> 
                   <span>Addebito su: <strong>{sub.account_name}</strong></span>
@@ -273,61 +313,7 @@ export default function SubscriptionsView() {
                   </span>
                 </div>
               </div>
-
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center', 
-                marginTop: 'auto',
-                paddingTop: '15px', 
-                borderTop: '1px solid var(--border-color)' 
-              }}>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button 
-                    onClick={() => toggleActive(sub)}
-                    style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '8px', 
-                      background: sub.active ? 'rgba(47, 129, 247, 0.1)' : 'rgba(139, 148, 158, 0.1)', 
-                      color: sub.active ? 'var(--accent-blue)' : 'var(--text-secondary)',
-                      border: 'none',
-                      padding: '6px 12px',
-                      borderRadius: '20px',
-                      fontSize: '0.8rem',
-                      fontWeight: '600',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {sub.active ? <Bell size={14} /> : <BellOff size={14} />}
-                    {sub.active ? 'Attivo' : 'Sospeso'}
-                  </button>
-                  <button 
-                    onClick={() => startEdit(sub)}
-                    style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}
-                  >
-                    <Edit2 size={16} />
-                  </button>
-                </div>
-                
-                <button 
-                  onClick={() => deleteSub(sub.id)} 
-                  style={{ 
-                    background: 'none', 
-                    border: 'none', 
-                    color: 'var(--text-secondary)', 
-                    cursor: 'pointer', 
-                    padding: '8px',
-                    borderRadius: '50%',
-                    transition: 'all 0.2s'
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.color = 'var(--accent-red)'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
-            </div>
+            </ActionCard>
           ))
         )}
       </div>

@@ -1,41 +1,35 @@
 import { Wallet, CreditCard, Calendar } from 'lucide-react';
 import DashboardGrid from '../common/DashboardGrid';
+import ActionCard from '../common/ActionCard';
 
 export default function InstallmentStats({ totalDebt, monthlyCommitment, activeCount, freedomDate }) {
   return (
     <DashboardGrid>
-      <div className="card" style={{ borderTop: '4px solid var(--accent-red)' }}>
-        <div className="card-header">
-          <h3 className="card-title">Debito Residuo Totale</h3>
-          <Wallet className="card-icon" color="var(--accent-red)" size={20} />
-        </div>
-        <div className="card-value value-negative" style={{ fontSize: '1.8em' }}>
-          € {totalDebt.toLocaleString('it-IT', { minimumFractionDigits: 2 })}
-        </div>
-        <div className="card-subtitle">Capitale ancora da rimborsare</div>
-      </div>
+      <ActionCard 
+        title="Debito Residuo Totale"
+        subtitle="Capitale ancora da rimborsare"
+        icon={Wallet}
+        accentColor="var(--accent-red)"
+        amount={`€ ${totalDebt.toLocaleString('it-IT', { minimumFractionDigits: 2 })}`}
+        amountClassName="value-negative"
+      />
 
-      <div className="card" style={{ borderTop: '4px solid var(--accent-blue)' }}>
-        <div className="card-header">
-          <h3 className="card-title">Impegno Mensile</h3>
-          <CreditCard className="card-icon" color="var(--accent-blue)" size={20} />
-        </div>
-        <div className="card-value" style={{ fontSize: '1.8em' }}>
-          € {monthlyCommitment.toLocaleString('it-IT', { minimumFractionDigits: 2 })}
-        </div>
-        <div className="card-subtitle">Totale rate correnti</div>
-      </div>
+      <ActionCard 
+        title="Impegno Mensile"
+        subtitle="Totale rate correnti"
+        icon={CreditCard}
+        accentColor="var(--accent-blue)"
+        amount={`€ ${monthlyCommitment.toLocaleString('it-IT', { minimumFractionDigits: 2 })}`}
+      />
 
-      <div className="card" style={{ borderTop: '4px solid var(--accent-green)' }}>
-        <div className="card-header">
-          <h3 className="card-title">Estinzione Debiti</h3>
-          <Calendar className="card-icon" color="var(--accent-green)" size={20} />
-        </div>
-        <div className="card-value" style={{ fontSize: '1.5em', textTransform: 'capitalize' }}>
-          {freedomDate ? new Date(freedomDate).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' }) : '---'}
-        </div>
-        <div className="card-subtitle">Data di libertà finanziaria stimata</div>
-      </div>
+      <ActionCard 
+        title="Estinzione Debiti"
+        subtitle="Data di libertà finanziaria stimata"
+        icon={Calendar}
+        accentColor="var(--accent-green)"
+        amount={freedomDate ? new Date(freedomDate).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' }) : '---'}
+        amountClassName="text-capitalize"
+      />
     </DashboardGrid>
   );
 }
