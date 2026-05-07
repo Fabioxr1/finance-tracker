@@ -27,9 +27,14 @@ export default function AppFooter() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           Made with <Heart size={14} style={{ color: 'var(--accent-red)' }} fill="var(--accent-red)" /> for Fabio
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', opacity: 0.8 }}>
-          <Code size={14} /> Source Code
-        </div>
+        <a 
+          href="https://github.com/Fabioxr1" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'inherit', textDecoration: 'none', opacity: 0.8 }}
+        >
+          <Code size={14} /> GitHub
+        </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', opacity: 0.8 }}>
           <Coffee size={14} /> Buy me a coffee
         </div>
