@@ -1,32 +1,50 @@
-# Finance Tracker - Guida Tecnica
+# 💎 Finance Tracker Pro
 
-Questo progetto è un'applicazione per la gestione delle finanze personali basata su **React (Frontend)**, **Node.js/Express (Backend)** e **PostgreSQL (Database)**. L'intera applicazione è containerizzata con Docker.
+![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![React](https://img.shields.io/badge/Frontend-React-61dafb.svg)
+![Node](https://img.shields.io/badge/Backend-Node.js-339933.svg)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791.svg)
 
-## 🚀 Come avviare l'applicazione
+**Finance Tracker Pro** è un'applicazione avanzata per la gestione delle finanze personali, progettata per offrire una visione a 360° del proprio patrimonio, degli investimenti e delle previsioni di spesa.
 
-Per far partire tutto l'ambiente di sviluppo:
+## ✨ Funzionalità Principali
+
+*   **📊 Dashboard Dinamica**: Riepilogo in tempo reale di saldo totale, net worth e flussi di cassa mensili.
+*   **📈 Gestione Investimenti**: Monitoraggio avanzato di portafogli (Crypto, Azioni, ETF) con calcolo automatico di PMC e ROI.
+*   **🛡️ Simulatore di Autonomia**: Calcola quanti mesi di indipendenza finanziaria hai in base alle tue spese medie e alla liquidità attuale.
+*   **🔄 Abbonamenti & Ricorrenze**: Gestione centralizzata dei costi fissi mensili e annuali.
+*   **🏷️ Analisi per Tag**: Sistema intelligente di tagging per categorizzare ogni singola spesa e analizzare i trend di consumo.
+*   **⚙️ Configurazione Agile**: Gestione personalizzata di categorie e conti con interfaccia atomica.
+
+## 🚀 Stack Tecnologico
+
+*   **Frontend**: React 19, Lucide Icons, Recharts (Data Visualization).
+*   **Backend**: Node.js, Express.js.
+*   **Database**: PostgreSQL.
+*   **DevOps**: Docker & Docker Compose per un deployment rapido e isolato.
+
+## 🛠️ Installazione Rapida
+
+Assicurati di avere Docker installato sul tuo sistema, quindi lancia:
+
 ```bash
 docker compose up -d --build
 ```
 
+L'applicazione sarà disponibile su `http://localhost:3000`.
+
 ## 🧪 Test Unitari
 
-Abbiamo implementato una suite di test unitari per garantire la correttezza dei calcoli finanziari e della logica di importazione dati. Poiché l'ambiente è containerizzato, i test vanno lanciati tramite Docker.
+Il progetto include una suite completa di test per garantire l'integrità dei calcoli finanziari:
 
-### 1. Test del Backend (Logica Saldi e Calcoli)
-Verifica che le entrate, le uscite e i calcoli degli investimenti (PMC/ROI) funzionino correttamente.
 ```bash
+# Backend Tests (ROI, PMC, Balances)
 docker exec -it reactspese_local-backend-1 npm test
-```
 
-### 2. Test del Frontend (Logica Importazione e UI)
-Verifica il parsing dei file CSV, la logica di duplicazione e i calcoli dinamici degli investimenti.
-```bash
+# Frontend Tests (CSV Parsing, Utils)
 docker exec -it reactspese_local-frontend-1 npm test
 ```
 
-## 📂 Struttura dei Test
-- `backend/__tests__/`: Contiene i test per saldi, validazione e **investimenti (PMC/ROI)**.
-- `frontend/src/__tests__/`: Contiene i test per parser CSV, **duplicazione transazioni** e **utility investimenti**.
-- `backend/utils/`: Utility testabili (es. calcolatore saldi, investmentCalculations).
-- `frontend/src/utils/`: Utility testabili (es. parser CSV, investmentUtils, transactionUtils).
+---
+*Prodotto con ❤️ da [Fabio](https://github.com/Fabioxr1)*
