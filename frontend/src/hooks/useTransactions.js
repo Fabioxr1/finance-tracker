@@ -207,6 +207,21 @@ export function useTransactions() {
     }
   };
 
+  const handleBulkUndo = async () => {
+    try {
+      const res = await fetch(`${API_URL}/transactions/bulk-undo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Errore durante l'annullamento");
+      alert(data.message);
+      fetchData();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -279,6 +294,6 @@ export function useTransactions() {
     newTx, setNewTx, editingId, setEditingId, editTx, setEditTx,
     selectedIds, setSelectedIds, fileInputRef,
     handleTypeChange, addTransaction, deleteTransaction, startEdit, saveEdit,
-    handleBulkDelete, handleBulkUpdate, handleFileUpload, handleExportCSV, fetchData
+    handleBulkDelete, handleBulkUpdate, handleBulkUndo, handleFileUpload, handleExportCSV, fetchData
   };
 }

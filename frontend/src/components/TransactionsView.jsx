@@ -18,7 +18,7 @@ export default function TransactionsView() {
     newTx, setNewTx, editingId, setEditingId, editTx, setEditTx,
     selectedIds, setSelectedIds, fileInputRef,
     handleTypeChange, addTransaction, deleteTransaction, startEdit, saveEdit,
-    handleBulkDelete, handleBulkUpdate, handleFileUpload, handleExportCSV, fetchData
+    handleBulkDelete, handleBulkUpdate, handleBulkUndo, handleFileUpload, handleExportCSV, fetchData
   } = useTransactions();
 
   // Logica specifica della View per la duplicazione (che usa addTransaction internamente)
@@ -67,12 +67,22 @@ export default function TransactionsView() {
             )}
           </div>
         </div>
-        <CSVControls 
-          onImportClick={() => fileInputRef.current.click()} 
-          onExportClick={handleExportCSV}
-          fileInputRef={fileInputRef} 
-          onFileChange={handleFileUpload} 
-        />
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button 
+            onClick={handleBulkUndo} 
+            className="btn-outline" 
+            style={{ color: 'var(--accent-red)', borderColor: 'var(--accent-red)', fontSize: '0.85rem' }}
+            title="Annulla l'ultima operazione di modifica massiva"
+          >
+            ↩️ Annulla Ultima Modifica
+          </button>
+          <CSVControls 
+            onImportClick={() => fileInputRef.current.click()} 
+            onExportClick={handleExportCSV}
+            fileInputRef={fileInputRef} 
+            onFileChange={handleFileUpload} 
+          />
+        </div>
       </div>
 
       <TransactionFilters 

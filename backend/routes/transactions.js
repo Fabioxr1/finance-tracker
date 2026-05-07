@@ -345,6 +345,29 @@ router.post('/bulk-update', async (req, res) => {
   try {
     await client.query('BEGIN');
 
+    // --- LOGICA UNDO: Salviamo lo stato attuale prima della modifica ---
+    const bulkOpRes = await client.query(
+      'INSERT INTO bulk_operations (operation_type) VALUES ($1) RETURNING id',
+      ['update']
+    );
+    const bulkOpId = bulkOpRes.rows[0].id;
+
+    // Recuperiamo tutte le transazioni coinvolte con i loro tag attuali
+    const currentTxsRes = await client.query(`
+      SELECT t.*, 
+             (SELECT json_agg(tt.tag_id) FROM transaction_tags tt WHERE tt.transaction_id = t.id) as tags
+      FROM transactions t 
+      WHERE t.id = ANY($1)
+    `, [ids]);
+
+    for (const tx of currentTxsRes.rows) {
+      await client.query(
+        'INSERT INTO bulk_operations_data (bulk_op_id, transaction_id, old_data) VALUES ($1, $2, $3)',
+        [bulkOpId, tx.id, JSON.stringify(tx)]
+      );
+    }
+    // --- FINE LOGICA UNDO ---
+
     if (updates && Object.keys(updates).length > 0) {
       let setClauses = [];
       let values = [];
@@ -377,7 +400,65 @@ router.post('/bulk-update', async (req, res) => {
     const updatedTxsRes = await pool.query('SELECT * FROM transactions WHERE id = ANY($1)', [ids]);
     updatedTxsRes.rows.forEach(tx => logTransaction(tx, 'UPDATE'));
 
-    res.json({ success: true });
+    res.json({ success: true, bulkId: bulkOpId });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    res.status(500).json({ error: err.message });
+  } finally {
+    client.release();
+  }
+});
+
+// 5.3 BULK UNDO Last Operation
+router.post('/bulk-undo', async (req, res) => {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    // Recuperiamo l'ultima operazione di tipo 'update'
+    const lastOpRes = await client.query('SELECT * FROM bulk_operations WHERE operation_type = \'update\' ORDER BY created_at DESC LIMIT 1');
+    if (lastOpRes.rows.length === 0) {
+      return res.status(404).json({ error: "Nessuna operazione da annullare" });
+    }
+    const bulkOp = lastOpRes.rows[0];
+
+    // Recuperiamo i dati storici
+    const historyRes = await client.query('SELECT * FROM bulk_operations_data WHERE bulk_op_id = $1', [bulkOp.id]);
+    
+    for (const item of historyRes.rows) {
+      const oldData = item.old_data;
+      const txId = item.transaction_id;
+
+      // Ripristiniamo la transazione
+      await client.query(`
+        UPDATE transactions SET 
+          account_id = $1, to_account_id = $2, category_id = $3, 
+          installment_id = $4, amount = $5, type = $6, 
+          recurrence_type = $7, date = $8, description = $9
+        WHERE id = $10
+      `, [
+        oldData.account_id, oldData.to_account_id, oldData.category_id,
+        oldData.installment_id, oldData.amount, oldData.type,
+        oldData.recurrence_type, oldData.date, oldData.description,
+        txId
+      ]);
+
+      // Ripristiniamo i Tag
+      await client.query('DELETE FROM transaction_tags WHERE transaction_id = $1', [txId]);
+      if (oldData.tags && Array.isArray(oldData.tags)) {
+        for (const tagId of oldData.tags) {
+          if (tagId) {
+            await client.query('INSERT INTO transaction_tags (transaction_id, tag_id) VALUES ($1, $2)', [txId, tagId]);
+          }
+        }
+      }
+    }
+
+    // Eliminiamo l'operazione dalla cronologia una volta annullata
+    await client.query('DELETE FROM bulk_operations WHERE id = $1', [bulkOp.id]);
+
+    await client.query('COMMIT');
+    res.json({ success: true, message: "Operazione annullata con successo" });
   } catch (err) {
     await client.query('ROLLBACK');
     res.status(500).json({ error: err.message });

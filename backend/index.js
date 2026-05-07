@@ -84,6 +84,24 @@ const initDB = async () => {
         PRIMARY KEY (transaction_id, tag_id)
       )
     `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS bulk_operations (
+        id SERIAL PRIMARY KEY,
+        operation_type VARCHAR(50) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS bulk_operations_data (
+        id SERIAL PRIMARY KEY,
+        bulk_op_id INT REFERENCES bulk_operations(id) ON DELETE CASCADE,
+        transaction_id INT, 
+        old_data JSONB NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
     
     const checkRes = await pool.query("SELECT 1 FROM accounts WHERE name = 'Investimenti' AND is_system = true");
     if (checkRes.rows.length === 0) {
