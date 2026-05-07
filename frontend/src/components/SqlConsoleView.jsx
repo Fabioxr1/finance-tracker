@@ -1,8 +1,22 @@
 import { useState } from 'react';
 import { Database, Play, AlertTriangle, CheckCircle, Table } from 'lucide-react';
-import '../index.css';
+import CodeMirror from '@uiw/react-codemirror';
+import { sql } from '@codemirror/lang-sql';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+// Definizione dello schema per l'autocompletamento
+const dbSchema = {
+  accounts: ['id', 'name', 'type', 'initial_balance', 'is_system'],
+  categories: ['id', 'name', 'type'],
+  transactions: ['id', 'account_id', 'to_account_id', 'category_id', 'amount', 'type', 'date', 'description', 'installment_id', 'recurrence_type'],
+  tags: ['id', 'name', 'color', 'description'],
+  transaction_tags: ['transaction_id', 'tag_id'],
+  installments: ['id', 'name', 'total_amount', 'monthly_amount', 'paid_installments', 'search_keyword'],
+  investments: ['id', 'name', 'ticker', 'manual_price', 'use_manual_price'],
+  investment_transactions: ['id', 'investment_id', 'shares', 'price_per_share', 'type', 'linked_transaction_id'],
+  subscriptions: ['id', 'name', 'amount', 'day_of_month', 'active']
+};
 
 export default function SqlConsoleView() {
   const [query, setQuery] = useState('SELECT * FROM accounts LIMIT 10;');
@@ -51,34 +65,35 @@ export default function SqlConsoleView() {
         <button className="year-selector" style={{fontSize: '11px', whiteSpace: 'nowrap'}} onClick={() => setQuery('SELECT c.name, SUM(t.amount) as totale FROM transactions t JOIN categories c ON t.category_id = c.id WHERE t.type = \'expense\' GROUP BY c.name ORDER BY totale DESC;')}>Spese per Categoria</button>
         <button className="year-selector" style={{fontSize: '11px', whiteSpace: 'nowrap'}} onClick={() => setQuery('SELECT a.name, SUM(CASE WHEN t.type=\'income\' THEN amount WHEN t.type=\'expense\' THEN -amount ELSE 0 END) as saldo FROM accounts a LEFT JOIN transactions t ON a.id = t.account_id GROUP BY a.name;')}>Saldo Reale Conti</button>
         <button className="year-selector" style={{fontSize: '11px', whiteSpace: 'nowrap'}} onClick={() => setQuery('SELECT name, ticker, (manual_price * total_shares) as valore_stimato FROM investments WHERE use_manual_price = true;')}>Valore Titoli Manuali</button>
+        <button className="year-selector" style={{fontSize: '11px', whiteSpace: 'nowrap'}} onClick={() => setQuery('SELECT * FROM transactions WHERE date BETWEEN \'2025-01-01\' AND \'2025-01-31\' ORDER BY date DESC;')}>Gennaio 2025</button>
         <button className="year-selector" style={{fontSize: '11px', whiteSpace: 'nowrap'}} onClick={() => setQuery('SELECT * FROM transactions WHERE date > CURRENT_DATE - INTERVAL \'7 days\' ORDER BY date DESC;')}>Ultimi 7 Giorni</button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '20px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '20px' }}>
         <div className="card" style={{ padding: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', color: 'var(--accent-blue)' }}>
             <Database size={20} />
             <span style={{ fontWeight: 'bold' }}>SQL Editor</span>
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)', marginLeft: 'auto' }}>Ctrl+Enter per eseguire</span>
           </div>
-          <textarea
-            className="text-input"
-            style={{ 
-              width: '100%', 
-              height: '180px', 
-              fontFamily: 'monospace', 
-              backgroundColor: '#0d1117', 
-              color: '#e6edf3',
-              fontSize: '14px',
-              lineHeight: '1.5',
-              padding: '15px'
-            }}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Scrivi SQL o clicca sulla legenda..."
-          />
+          <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+            <CodeMirror
+              value={query}
+              height="200px"
+              theme="dark"
+              extensions={[sql({ schema: dbSchema })]}
+              onChange={(value) => setQuery(value)}
+              onKeyDown={(e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                  executeQuery();
+                }
+              }}
+              style={{ fontSize: '14px' }}
+            />
+          </div>
         </div>
 
-        <div className="card" style={{ padding: '15px', fontSize: '12px', overflowY: 'auto', maxHeight: '250px' }}>
+        <div className="card" style={{ padding: '15px', fontSize: '12px' }}>
           <div style={{ fontWeight: 'bold', marginBottom: '10px', color: 'var(--accent-blue)', display: 'flex', alignItems: 'center', gap: '5px' }}>
             <Table size={14} /> Legenda (Clicca per SELECT)
           </div>
