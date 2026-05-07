@@ -74,7 +74,7 @@ export default function TransactionsView() {
             style={{ color: 'var(--accent-red)', borderColor: 'var(--accent-red)', fontSize: '0.85rem' }}
             title="Annulla l'ultima operazione di modifica massiva"
           >
-            ↩️ Annulla Ultima Modifica
+            ↩️ Annulla Ultima Modifica (Solo per operazioni di Bulk)
           </button>
           <CSVControls 
             onImportClick={() => fileInputRef.current.click()} 
