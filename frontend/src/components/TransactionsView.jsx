@@ -8,6 +8,9 @@ import TransactionForm from './transactions/TransactionForm';
 import TransactionTable from './transactions/TransactionTable';
 import TransactionPagination from './transactions/TransactionPagination';
 import CSVControls from './transactions/CSVControls';
+import PageHeader from './common/PageHeader';
+import AppButton from './common/AppButton';
+import FormSelect from './common/FormSelect';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -48,42 +51,40 @@ export default function TransactionsView() {
 
   return (
     <div>
-      <div className="page-header" style={{ marginBottom: '20px' }}>
-        <div>
-          <h2 className="page-title" style={{marginBottom: 0}}>Le tue Transazioni</h2>
-          <div style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
+      <PageHeader 
+        title="Le tue Transazioni"
+        description={
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
             {lastTxDate && (
-              <p style={{ fontSize: '0.85em', color: 'var(--text-secondary)', marginTop: '5px' }}>
-                Ultima: <strong style={{ color: 'var(--accent-blue)' }}>{new Date(lastTxDate).toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })}</strong>
-              </p>
+              <span>Ultima: <strong style={{ color: 'var(--accent-blue)' }}>{new Date(lastTxDate).toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })}</strong></span>
             )}
             {(filters.description || filters.category_id || filters.account_id || filters.type || filters.id || filters.amount) && (
-              <p style={{ fontSize: '0.85em', color: 'var(--text-secondary)', marginTop: '5px' }}>
-                Totale Risultati: <strong style={{ color: summary.totalBalance >= 0 ? 'var(--accent-green)' : 'var(--accent-red)' }}>
-                  € {Math.abs(summary.totalBalance).toLocaleString('it-IT', { minimumFractionDigits: 2 })}
-                  {summary.totalBalance < 0 ? ' (Uscita)' : ' (Entrata)'}
-                </strong>
-              </p>
+              <span>Totale Risultati: <strong style={{ color: summary.totalBalance >= 0 ? 'var(--accent-green)' : 'var(--accent-red)' }}>
+                € {Math.abs(summary.totalBalance).toLocaleString('it-IT', { minimumFractionDigits: 2 })}
+                {summary.totalBalance < 0 ? ' (Uscita)' : ' (Entrata)'}
+              </strong></span>
             )}
           </div>
-        </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <button 
-            onClick={handleBulkUndo} 
-            className="btn-outline" 
-            style={{ color: 'var(--accent-red)', borderColor: 'var(--accent-red)', fontSize: '0.85rem' }}
-            title="Annulla l'ultima operazione di modifica massiva"
-          >
-            ↩️ Annulla Ultima Modifica (Solo per operazioni di Bulk)
-          </button>
-          <CSVControls 
-            onImportClick={() => fileInputRef.current.click()} 
-            onExportClick={handleExportCSV}
-            fileInputRef={fileInputRef} 
-            onFileChange={handleFileUpload} 
-          />
-        </div>
-      </div>
+        }
+        actions={
+          <>
+            <AppButton 
+              variant="outline" 
+              onClick={handleBulkUndo}
+              style={{ color: 'var(--accent-red)', borderColor: 'rgba(248,81,73,0.3)', fontSize: '0.8rem' }}
+              title="Annulla l'ultima operazione di modifica massiva"
+            >
+              ↩️ Annulla Ultima Modifica
+            </AppButton>
+            <CSVControls 
+              onImportClick={() => fileInputRef.current.click()} 
+              onExportClick={handleExportCSV}
+              fileInputRef={fileInputRef} 
+              onFileChange={handleFileUpload} 
+            />
+          </>
+        }
+      />
 
       <TransactionFilters 
         filters={filters} setFilters={setFilters} 
@@ -103,28 +104,32 @@ export default function TransactionsView() {
         <div className="card bulk-actions-bar">
           <span className="bulk-count">{selectedIds.length} transazioni selezionate</span>
           <div className="bulk-actions-group">
-            <select className="year-selector" onChange={(e) => handleBulkUpdate({ updates: { recurrence_type: e.target.value } })} value="">
-              <option value="" disabled>Tipo Ricorrenza</option>
-              <option value="monthly">🔄 Mensile</option>
-              <option value="extraordinary">⚡ Straordinaria</option>
-              <option value="occasional">📅 Saltuaria</option>
-              <option value="yearly">🗓️ Annuale</option>
-              <option value="variable">📉 Variabile</option>
-            </select>
-            <select className="year-selector" onChange={(e) => handleBulkUpdate({ updates: { category_id: e.target.value } })} value="">
-              <option value="" disabled>Sposta in Categoria</option>
-              {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-            <select className="year-selector" style={{ borderColor: 'var(--accent-blue)' }} onChange={(e) => handleBulkUpdate({ tag_id: e.target.value })} value="">
-              <option value="" disabled>Aggiungi Tag #</option>
-              {availableTags.map(tag => <option key={tag.id} value={tag.id}>#{tag.name}</option>)}
-            </select>
-            <select className="year-selector" style={{ borderColor: 'var(--accent-red)' }} onChange={(e) => handleBulkUpdate({ remove_tag_id: e.target.value })} value="">
-              <option value="" disabled>Rimuovi Tag X</option>
-              {availableTags.map(tag => <option key={tag.id} value={tag.id}>#{tag.name}</option>)}
-            </select>
-            <button onClick={handleBulkDelete} className="bulk-btn-delete">Elimina Selezionate</button>
-            <button onClick={() => setSelectedIds([])} className="bulk-btn-cancel">Deseleziona</button>
+            <FormSelect 
+              placeholder="Tipo Ricorrenza"
+              onChange={(val) => handleBulkUpdate({ updates: { recurrence_type: val } })}
+              options={[
+                { value: 'monthly', label: '🔄 Mensile' },
+                { value: 'extraordinary', label: '⚡ Straordinaria' },
+                { value: 'occasional', label: '📅 Saltuaria' },
+                { value: 'yearly', label: '🗓️ Annuale' },
+                { value: 'variable', label: '📉 Variabile' }
+              ]}
+              style={{ height: '36px', fontSize: '0.85rem' }}
+            />
+            <FormSelect 
+              placeholder="Sposta in Categoria"
+              onChange={(val) => handleBulkUpdate({ updates: { category_id: val } })}
+              options={categories.map(c => ({ value: c.id, label: c.name }))}
+              style={{ height: '36px', fontSize: '0.85rem' }}
+            />
+            <FormSelect 
+              placeholder="Aggiungi Tag #"
+              onChange={(val) => handleBulkUpdate({ tag_id: val })}
+              options={availableTags.map(tag => ({ value: tag.id, label: `#${tag.name}` }))}
+              style={{ height: '36px', fontSize: '0.85rem', borderColor: 'var(--accent-blue)' }}
+            />
+            <AppButton variant="danger" onClick={handleBulkDelete} style={{ padding: '6px 12px', fontSize: '0.85rem' }}>Elimina Selezionate</AppButton>
+            <AppButton variant="outline" onClick={() => setSelectedIds([])} style={{ padding: '6px 12px', fontSize: '0.85rem' }}>Annulla</AppButton>
           </div>
         </div>
       )}

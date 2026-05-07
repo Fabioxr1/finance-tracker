@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { Wallet, Plus, Trash2, Edit2, X, Check } from 'lucide-react';
 import DashboardGrid from './common/DashboardGrid';
 import ActionCard from './common/ActionCard';
+import PageHeader from './common/PageHeader';
+import FormInput from './common/FormInput';
+import AppButton from './common/AppButton';
 import '../index.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -77,7 +80,10 @@ export default function AccountsView() {
 
   return (
     <div>
-      <h2 className="chart-title" style={{marginBottom: '20px'}}>I tuoi Conti e Carte</h2>
+      <PageHeader 
+        title="I tuoi Conti e Carte" 
+        description={`Gestisci i tuoi asset finanziari. Hai ${accounts.length} conti configurati.`}
+      />
       
       {accounts.length === 0 ? (
         <div style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>
@@ -106,39 +112,33 @@ export default function AccountsView() {
               >
                 {isEditing ? (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <input 
-                      type="text"
-                      className="text-input" 
+                    <FormInput 
                       value={editAccount.name} 
                       placeholder="Nome"
-                      onChange={e => setEditAccount({...editAccount, name: e.target.value})} 
+                      onChange={val => setEditAccount({...editAccount, name: val})} 
                     />
-                    <input 
-                      type="text" 
+                    <FormInput 
                       placeholder="Tipo (es. Conto Corrente)" 
-                      className="text-input"
                       value={editAccount.type}
-                      onChange={e => setEditAccount({...editAccount, type: e.target.value})}
+                      onChange={val => setEditAccount({...editAccount, type: val})}
                       required
                     />
-                    <input 
+                    <FormInput 
                       type="number" 
                       step="0.01" 
-                      placeholder="Saldo Iniziale (Giorno 0) €"
-                      className="text-input" 
+                      placeholder="Saldo Iniziale €"
                       value={editAccount.initial_balance} 
-                      onChange={e => setEditAccount({...editAccount, initial_balance: parseFloat(e.target.value) || 0})} 
+                      onChange={val => setEditAccount({...editAccount, initial_balance: parseFloat(val) || 0})} 
                     />
-                    <input 
+                    <FormInput 
                       type="password" 
-                      placeholder="Password Admin (per sbloccare saldo)"
-                      className="text-input" 
+                      placeholder="Password Admin"
                       value={editAccount.admin_password || ''} 
-                      onChange={e => setEditAccount({...editAccount, admin_password: e.target.value})} 
+                      onChange={val => setEditAccount({...editAccount, admin_password: val})} 
                     />
                     <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                      <button onClick={saveEdit} style={{ flex: 1, background: 'var(--accent-green)', color: 'white', border: 'none', padding: '8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center'}}><Check size={18} /></button>
-                      <button onClick={() => setEditingId(null)} style={{ flex: 1, background: 'var(--border-color)', color: 'white', border: 'none', padding: '8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center'}}><X size={18} /></button>
+                      <AppButton variant="success" onClick={saveEdit} style={{ flex: 1 }} icon={Check} />
+                      <AppButton variant="outline" onClick={() => setEditingId(null)} style={{ flex: 1 }} icon={X} />
                     </div>
                   </div>
                 ) : (
@@ -159,42 +159,31 @@ export default function AccountsView() {
       <div className="card" style={{marginTop: '30px'}}>
         <h3 className="card-title">Aggiungi nuovo conto</h3>
         <form onSubmit={addAccount} style={{ display: 'flex', gap: '15px', marginTop: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <input 
-            type="text" 
+          <FormInput 
             placeholder="Nome (es. Fineco, Digital...)" 
-            className="text-input"
-            style={{ flex: 1, minWidth: '200px' }}
+            containerStyle={{ flex: 1, minWidth: '200px' }}
             value={newAccount.name}
-            onChange={e => setNewAccount({...newAccount, name: e.target.value})}
+            onChange={val => setNewAccount({...newAccount, name: val})}
             required
           />
           
-          <input 
-            type="text" 
+          <FormInput 
             placeholder="Tipo (es. Conto, Contanti...)" 
-            className="text-input"
-            style={{ width: '220px' }}
+            containerStyle={{ width: '220px' }}
             value={newAccount.type}
-            onChange={e => setNewAccount({...newAccount, type: e.target.value})}
+            onChange={val => setNewAccount({...newAccount, type: val})}
             required
           />
 
-          <input 
+          <FormInput 
             type="number" 
             step="0.01"
             placeholder="Saldo di Partenza €" 
-            className="text-input"
-            style={{ width: '150px' }}
+            containerStyle={{ width: '150px' }}
             value={newAccount.initial_balance}
-            onChange={e => setNewAccount({...newAccount, initial_balance: parseFloat(e.target.value) || 0})}
+            onChange={val => setNewAccount({...newAccount, initial_balance: parseFloat(val) || 0})}
           />
-          <button 
-            type="submit" 
-            className="year-selector" 
-            style={{ background: 'var(--accent-blue)', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer'}}
-          >
-            <Plus size={18} /> Aggiungi
-          </button>
+          <AppButton type="submit" icon={Plus}>Aggiungi</AppButton>
         </form>
       </div>
     </div>

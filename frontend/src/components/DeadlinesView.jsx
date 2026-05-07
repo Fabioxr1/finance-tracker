@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import DeadlineForm from './deadlines/DeadlineForm';
 import DeadlineList from './deadlines/DeadlineList';
-import { Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Filter, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import PageHeader from './common/PageHeader';
+import FormInput from './common/FormInput';
+import FormSelect from './common/FormSelect';
+import AppButton from './common/AppButton';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const ITEMS_PER_PAGE = 20;
@@ -122,9 +126,10 @@ export default function DeadlinesView() {
 
   return (
     <div className="deadlines-view">
-      <header className="page-header">
-        <h1 className="page-title">Gestione Scadenze</h1>
-      </header>
+      <PageHeader 
+        title="Gestione Scadenze" 
+        description={`Pianifica i tuoi pagamenti futuri. ${filteredDeadlines.length} risultati trovati.`}
+      />
 
       <DeadlineForm 
         categories={categories} 
@@ -136,36 +141,24 @@ export default function DeadlinesView() {
       {/* BARRA FILTRI */}
       <div className="card" style={{ marginBottom: '20px', padding: '15px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'center' }}>
-          <div style={{ position: 'relative', flex: 2, minWidth: '200px' }}>
-            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
-            <input 
-              type="text" 
-              placeholder="Cerca per titolo..." 
-              className="text-input" 
-              style={{ width: '100%', paddingLeft: '40px' }}
-              value={filterTitle}
-              onChange={(e) => setFilterTitle(e.target.value)}
-            />
-          </div>
+          <FormInput 
+            placeholder="Cerca per titolo..." 
+            icon={Search}
+            value={filterTitle}
+            onChange={setFilterTitle}
+            debounceMs={300}
+            onClear={() => setFilterTitle('')}
+            containerStyle={{ flex: 2, minWidth: '200px' }}
+          />
           
-          <div style={{ position: 'relative', flex: 1, minWidth: '180px' }}>
-            <Filter size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
-            <select 
-              className="year-selector" 
-              style={{ width: '100%', paddingLeft: '40px' }}
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-            >
-              <option value="">Tutte le categorie</option>
-              {categories.filter(c => c.type === 'expense').map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
-          
-          <div style={{ color: 'var(--text-secondary)', fontSize: '0.9em' }}>
-            {filteredDeadlines.length} risultati trovati
-          </div>
+          <FormSelect 
+            placeholder="Tutte le categorie"
+            icon={Filter}
+            value={filterCategory}
+            onChange={setFilterCategory}
+            options={categories.filter(c => c.type === 'expense').map(c => ({ value: c.id, label: c.name }))}
+            containerStyle={{ flex: 1, minWidth: '180px' }}
+          />
         </div>
       </div>
 

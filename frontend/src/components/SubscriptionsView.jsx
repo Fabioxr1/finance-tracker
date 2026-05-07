@@ -3,6 +3,8 @@ import { Plus, Trash2, Calendar, CreditCard, Tag, Check, X, Bell, BellOff, Refre
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import ModalWrapper from './common/ModalWrapper';
 import ActionCard from './common/ActionCard';
+import PageHeader from './common/PageHeader';
+import AppButton from './common/AppButton';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -140,35 +142,44 @@ export default function SubscriptionsView() {
 
   return (
     <div className="subscriptions-view" style={{ animation: 'fadeIn 0.5s ease-out' }}>
-      <div className="page-header">
-        <div>
-          <h2 className="page-title">Abbonamenti & Ricorrenze</h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9em', marginTop: '5px' }}>
+      <PageHeader 
+        title="Abbonamenti & Ricorrenze"
+        description={
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
             Hai <strong style={{ color: 'var(--accent-blue)' }}>{subscriptions.length}</strong> servizi registrati
           </p>
-        </div>
-        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-          <ActionCard 
-            title="Uscita Mensile"
-            subtitle={MONTHS[currentMonth-1].name}
-            icon={RefreshCw}
-            accentColor="var(--accent-red)"
-            amount={`€${totalMonthlyCurrent.toFixed(2)}`}
-            style={{ marginBottom: 0, padding: '10px 20px' }}
-          />
-          <ActionCard 
-            title="Totale Annuale"
-            subtitle="Stima 12 mesi"
-            icon={TrendingDown}
-            accentColor="var(--accent-blue)"
-            amount={`€${totalAnnual.toFixed(2)}`}
-            style={{ marginBottom: 0, padding: '10px 20px' }}
-          />
-          <button className="add-title-btn" onClick={() => { setEditingId(null); setNewSub({ name: '', amount: '', category_id: categories[0]?.id, account_id: accounts[0]?.id, day_of_month: 1, active: true, active_months: [1,2,3,4,5,6,7,8,9,10,11,12] }); setIsModalOpen(true); }}>
-            <Plus size={20} /> Nuovo
-          </button>
-        </div>
-      </div>
+        }
+        actions={
+          <>
+            <ActionCard 
+              title="Uscita Mensile"
+              subtitle={MONTHS[currentMonth-1]?.name}
+              icon={RefreshCw}
+              accentColor="var(--accent-red)"
+              amount={`€${totalMonthlyCurrent.toFixed(2)}`}
+              style={{ marginBottom: 0, padding: '8px 16px', minWidth: '180px' }}
+            />
+            <ActionCard 
+              title="Totale Annuale"
+              subtitle="Stima 12 mesi"
+              icon={TrendingDown}
+              accentColor="var(--accent-blue)"
+              amount={`€${totalAnnual.toFixed(2)}`}
+              style={{ marginBottom: 0, padding: '8px 16px', minWidth: '180px' }}
+            />
+            <AppButton 
+              icon={Plus} 
+              onClick={() => { 
+                setEditingId(null); 
+                setNewSub({ name: '', amount: '', category_id: categories[0]?.id, account_id: accounts[0]?.id, day_of_month: 1, active: true, active_months: [1,2,3,4,5,6,7,8,9,10,11,12] }); 
+                setIsModalOpen(true); 
+              }}
+            >
+              Nuovo
+            </AppButton>
+          </>
+        }
+      />
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
           <div className="card" style={{ padding: '20px', minHeight: '300px', display: 'flex', flexDirection: 'column' }}>

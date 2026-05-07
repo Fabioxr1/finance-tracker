@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Shield, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Shield, ToggleLeft, ToggleRight, Wallet, TrendingDown, Clock, Activity, RotateCcw } from 'lucide-react';
+import PageHeader from './common/PageHeader';
+import ActionCard from './common/ActionCard';
+import AppButton from './common/AppButton';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -94,56 +97,47 @@ export default function RunwaySimulator() {
   const baseBarWidth = Math.min((baseRunway / maxMonths) * 100, 100);
 
   return (
-    <section style={styles.section}>
-      <div style={styles.header}>
-        <h3 style={styles.title}>
-          <Shield size={22} color={runwayColor} />
-          Simulatore di Autonomia Finanziaria
-        </h3>
-        <span style={{ fontSize: '11px', color: '#64748b' }}>
-          Basato sulle spese medie degli ultimi 6 mesi
-        </span>
-      </div>
+    <section className="card" style={{ padding: '24px', marginBottom: '30px' }}>
+      <PageHeader 
+        title="Simulatore di Autonomia Finanziaria"
+        icon={Shield}
+        description="Basato sulle spese medie degli ultimi 6 mesi. Escludi i tag per simulare scenari di risparmio."
+        style={{ marginBottom: '24px' }}
+      />
 
       {/* Hero Cards */}
-      <div style={styles.heroGrid}>
-        <div style={styles.heroCard('linear-gradient(135deg, #1e293b, #0f172a)')}>
-          <p style={styles.heroLabel}>Liquidità Attuale</p>
-          <p style={styles.heroValue('white')}>
-            € {data.currentBalance.toLocaleString('it-IT')}
-          </p>
-        </div>
-        <div style={styles.heroCard('linear-gradient(135deg, #1e293b, #0f172a)')}>
-          <p style={styles.heroLabel}>Spesa Media / Mese</p>
-          <p style={styles.heroValue('#fb7185')}>
-            € {Math.round(adjustedMonthly).toLocaleString('it-IT')}
-          </p>
-          {savedPerMonth > 0 && (
-            <p style={{ fontSize: '10px', color: '#34d399', margin: '4px 0 0' }}>
-              -€ {Math.round(savedPerMonth).toLocaleString('it-IT')} risparmiati
-            </p>
-          )}
-        </div>
-        <div style={styles.heroCard(`linear-gradient(135deg, ${runwayColor}15, ${runwayColor}05)`)}>
-          <p style={styles.heroLabel}>Mesi di Autonomia</p>
-          <p style={styles.heroValue(runwayColor)}>
-            {adjustedRunway.toFixed(1)} <span style={{ fontSize: '14px', fontWeight: 'normal' }}>mesi</span>
-          </p>
-          {gainedMonths > 0.1 && (
-            <p style={{ fontSize: '10px', color: '#34d399', margin: '4px 0 0' }}>
-              +{gainedMonths.toFixed(1)} mesi guadagnati
-            </p>
-          )}
-        </div>
-        <div style={styles.heroCard('linear-gradient(135deg, #1e293b, #0f172a)')}>
-          <p style={styles.heroLabel}>Scenario Base</p>
-          <p style={styles.heroValue('#94a3b8')}>
-            {baseRunway.toFixed(1)} <span style={{ fontSize: '14px', fontWeight: 'normal' }}>mesi</span>
-          </p>
-          <p style={{ fontSize: '10px', color: '#64748b', margin: '4px 0 0' }}>
-            Con tutte le spese
-          </p>
-        </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '28px' }}>
+        <ActionCard 
+          title="Liquidità Attuale"
+          icon={Wallet}
+          accentColor="var(--accent-blue)"
+          amount={`€ ${data.currentBalance.toLocaleString('it-IT')}`}
+          style={{ marginBottom: 0 }}
+        />
+        <ActionCard 
+          title="Spesa Media / Mese"
+          icon={TrendingDown}
+          accentColor="var(--accent-red)"
+          amount={`€ ${Math.round(adjustedMonthly).toLocaleString('it-IT')}`}
+          subtitle={savedPerMonth > 0 ? `-€ ${Math.round(savedPerMonth).toLocaleString('it-IT')} risparmiati` : undefined}
+          style={{ marginBottom: 0 }}
+        />
+        <ActionCard 
+          title="Mesi di Autonomia"
+          icon={Clock}
+          accentColor={runwayColor}
+          amount={`${adjustedRunway.toFixed(1)} mesi`}
+          subtitle={gainedMonths > 0.1 ? `+${gainedMonths.toFixed(1)} mesi guadagnati` : undefined}
+          style={{ marginBottom: 0 }}
+        />
+        <ActionCard 
+          title="Scenario Base"
+          icon={Activity}
+          accentColor="var(--text-secondary)"
+          amount={`${baseRunway.toFixed(1)} mesi`}
+          subtitle="Con tutte le spese"
+          style={{ marginBottom: 0 }}
+        />
       </div>
 
       {/* Barra Visiva */}
@@ -177,19 +171,18 @@ export default function RunwaySimulator() {
       {/* Lista Tag con Toggle */}
       <div style={{ marginTop: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-          <h4 style={{ margin: 0, fontSize: '13px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          <h4 style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '700' }}>
             Disattiva spese per simulare
           </h4>
           {excludedTags.length > 0 && (
-            <button
-              onClick={() => setExcludedTags([])}
-              style={{
-                background: 'rgba(251,113,133,0.1)', color: '#fb7185', border: '1px solid rgba(251,113,133,0.2)',
-                padding: '4px 12px', borderRadius: '8px', fontSize: '11px', cursor: 'pointer', fontWeight: '600'
-              }}
+            <AppButton 
+              variant="danger" 
+              onClick={() => setExcludedTags([])} 
+              icon={RotateCcw}
+              style={{ padding: '4px 12px', fontSize: '11px' }}
             >
               Ripristina tutto
-            </button>
+            </AppButton>
           )}
         </div>
 
