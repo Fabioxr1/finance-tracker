@@ -92,6 +92,7 @@ Eseguita ad ogni avvio del server. Garantisce compatibilità schema senza perdit
 4. `ALTER TABLE tags ADD COLUMN IF NOT EXISTS description` — Colonna descrizione tag
 5. `CREATE TABLE IF NOT EXISTS transaction_tags` — Ponte N:N transazioni-tag
 6. Crea conto "Investimenti" di sistema se non esiste
+7. Crea tabelle di audit `bulk_operations` e `bulk_operations_data` per il sistema **Undo**
 
 > ⚠️ **Quando aggiungi una colonna o tabella:** inseriscila qui E in `init.sql`
 
@@ -237,10 +238,16 @@ Il file più complesso. Gestisce operazioni singole, di massa e importazione.
 - Per ogni ID: controlla se ha finanziamento → decrementa
 - DELETE con `WHERE id = ANY($1)`
 
-#### `POST /bulk-update` — Modifica massiva
-- Riceve `ids`, `updates` (oggetto campo:valore), `tag_id` (aggiunta), `remove_tag_id` (rimozione)
-- Costruisce query UPDATE dinamica
-- Aggiunge/rimuove tag in massa
+#### `POST /bulk-update` — Modifica massiva (in transazione DB)
+1. Salva lo stato originale delle transazioni in `bulk_operations_data`
+2. Costruisce query UPDATE dinamica
+3. Aggiunge/rimuove tag in massa
+4. Crea record in `bulk_operations` per tracciamento
+
+#### `POST /bulk-undo` — Annulla ultima operazione (in transazione DB)
+1. Recupera l'ultima operazione da `bulk_operations`
+2. Ripristina i dati originali da `bulk_operations_data` su ogni transazione coinvolta
+3. Elimina i record di audit dopo il ripristino
 
 ---
 

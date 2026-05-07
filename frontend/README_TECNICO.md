@@ -247,6 +247,7 @@ Agisce come orchestratore dei sotto-componenti:
 - Sposta in categoria (dropdown)
 - Aggiungi tag (dropdown)
 - Rimuovi tag (dropdown)
+- **Annulla Ultima Modifica (Pulsante Undo)**: Ripristina lo stato precedente dopo un'azione bulk
 - Elimina selezionate (button)
 - Deseleziona tutto (button)
 
@@ -438,5 +439,6 @@ const res = await fetch(`${API_URL}/endpoint`, {
 | PredictionCard | Fa fetch indipendente da DashboardView. Se modifichi i dati predictions, questo è il componente | `PredictionCard.jsx` |
 | TransactionsView | Il componente più grande. Le operazioni bulk NON svuotano la selezione (per tag multipli) | `TransactionsView.jsx` |
 | CSV Import | Il parsing è in `csvParser.js`. Il POST va a `/transactions/batch` (endpoint `bulk` nel backend) | `csvParser.js`, `TransactionsView.jsx` |
-| Stili | Tutte le variabili CSS sono in `index.css`. Non hardcodare colori nei componenti | `index.css` |
+| Stili | Tutte le variabili CSS sono in `styles/vars.css`. Le select hanno classi specifiche (`select-dark-fix`) per visibilità su Windows | `styles/vars.css` |
+| Undo | Solo l'ultima operazione di massa può essere annullata (persistenza DB) | `useTransactions.js` |
 | Investimenti | I modali sono tutti in un singolo file `InvestmentModals.jsx` (23KB) — molto grande | `InvestmentModals.jsx` |

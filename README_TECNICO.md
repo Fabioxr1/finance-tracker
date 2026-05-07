@@ -30,10 +30,10 @@ Finance Tracker è un'applicazione **self-hosted** per la gestione completa dell
 |--------|-------------|
 | **Dashboard** | Riepilogo finanziario annuale con grafici, categorie, previsioni |
 | **Conti & Carte** | Gestione conti bancari con saldo calcolato in tempo reale |
-| **Transazioni** | CRUD completo, importazione CSV con **Update via ID**, filtri (ID, Prezzo), operazioni di massa, **Duplicazione** |
+| **Transazioni** | CRUD completo, importazione CSV con **Update via ID**, filtri (ID, Prezzo), operazioni di massa, **Duplicazione**, **Sistema Undo (Annulla ultima modifica)** |
 | **Scadenze** | Pagamenti ricorrenti annuali (bollo, assicurazione, ecc.) |
 | **Abbonamenti** | Spese mensili ricorrenti (Netflix, Spotify, ecc.) |
-| **Tag** | Etichettatura trasversale delle transazioni + analisi statistica |
+| **Tag** | Etichettatura trasversale delle transazioni + analisi statistica (Aggiunta/Rimozione massiva) |
 | **Investimenti** | Portfolio con prezzi real-time (Yahoo Finance), PAC, acquisti/vendite, **Modular Hook** |
 | **Rate & Finanziamenti** | Tracciamento debiti con ricalcolo dinamico e associazione automatica |
 | **Simulatore** | Proiezione di risparmio a fine anno con slider obiettivo |
@@ -235,6 +235,7 @@ Questa funzione viene eseguita **ad ogni avvio** del server e garantisce che lo 
 3. Crea tabella `tags` (se mancante)
 4. Crea tabella `transaction_tags` (se mancante)
 5. Crea il conto di sistema "Investimenti" (se mancante)
+6. Crea le tabelle di audit `bulk_operations` e `bulk_operations_data` per il sistema **Undo**
 
 > **REGOLA:** Ogni futura modifica allo schema deve essere aggiunta qui E in `init.sql`.
 
@@ -262,8 +263,9 @@ Questa funzione viene eseguita **ad ogni avvio** del server e garantisce che lo 
 | DELETE | `/api/transactions/:id` | `transactions.js` | Elimina transazione |
 | POST | `/api/transactions/bulk` | `transactions.js` | Import massivo (CSV - 6 o 9 colonne) |
 | GET | `/api/transactions?export=true` | `transactions.js` | Esportazione filtrata (usata per il CSV) |
-| POST | `/api/transactions/bulk-delete` | `transactions.js` | Eliminazione massiva |
-| POST | `/api/transactions/bulk-update` | `transactions.js` | Modifica massiva |
+| POST | `/api/transactions/bulk-delete` | `transactions.js` | Eliminazione massiva (con backup per Undo) |
+| POST | `/api/transactions/bulk-update` | `transactions.js` | Modifica massiva (con backup per Undo) |
+| POST | `/api/transactions/bulk-undo` | `transactions.js` | **Annulla l'ultima operazione di massa** |
 | GET | `/api/installments` | `installments.js` | Lista finanziamenti con ricalcolo |
 | POST | `/api/installments` | `installments.js` | Crea finanziamento |
 | PUT | `/api/installments/:id` | `installments.js` | Modifica finanziamento |
