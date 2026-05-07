@@ -48,6 +48,11 @@
   outline: none;
 }
 
+.year-selector option {
+  background-color: #161b22; /* Forza sfondo scuro per le opzioni */
+  color: white;
+}
+
 .text-input {
   cursor: text;
 }
