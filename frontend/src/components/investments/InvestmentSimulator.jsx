@@ -5,9 +5,16 @@ import {
 } from 'recharts';
 
 export default function InvestmentSimulator({ initialValue, monthlyContribution }) {
-  const [returnRate, setReturnRate] = useState(6); // % annuo
-  const [years, setYears] = useState(20);
   const [monthlyAdd, setMonthlyAdd] = useState(monthlyContribution || 0);
+  const [years, setYears] = useState(20);
+  const [returnRate, setReturnRate] = useState(6); // % annuo
+
+  // Sincronizza il valore del PAC quando i dati vengono caricati dal database
+  React.useEffect(() => {
+    if (monthlyContribution > 0) {
+      setMonthlyAdd(monthlyContribution);
+    }
+  }, [monthlyContribution]);
 
   // Calcolo della proiezione
   const data = useMemo(() => {
