@@ -8,7 +8,11 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 3000,
     watch: {
-      usePolling: true, // Essenziale per far funzionare l'aggiornamento automatico (HMR) su Windows con Docker
+      usePolling: true,
     }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
   }
 })

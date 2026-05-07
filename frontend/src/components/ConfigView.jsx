@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Tag } from 'lucide-react';
+import DashboardGrid from './common/DashboardGrid';
 import '../index.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -84,7 +85,7 @@ export default function ConfigView() {
         </form>
       </div>
 
-      <div className="dashboard-grid">
+      <DashboardGrid>
         <div className="card">
           <div className="card-header">
             <h3 className="card-title">Categorie Uscite</h3>
@@ -95,7 +96,7 @@ export default function ConfigView() {
               <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: 'var(--bg-hover)', borderRadius: '8px' }}>
                 <span>{c.name}</span>
                 <button onClick={() => deleteCategory(c.id)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-red)', cursor: 'pointer' }}>
-                  <Trash2 size={16} />
+                   <Trash2 size={16} />
                 </button>
               </div>
             ))}
@@ -113,14 +114,14 @@ export default function ConfigView() {
               <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: 'var(--bg-hover)', borderRadius: '8px' }}>
                 <span>{c.name}</span>
                 <button onClick={() => deleteCategory(c.id)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-red)', cursor: 'pointer' }}>
-                  <Trash2 size={16} />
+                   <Trash2 size={16} />
                 </button>
               </div>
             ))}
             {incomes.length === 0 && <span style={{ color: 'var(--text-secondary)' }}>Nessuna categoria</span>}
           </div>
         </div>
-      </div>
+      </DashboardGrid>
     </div>
   );
 }

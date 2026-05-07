@@ -1,8 +1,9 @@
 import { Wallet, TrendingUp, PieChart } from 'lucide-react';
+import DashboardGrid from '../common/DashboardGrid';
 
 export default function StatsCards({ data }) {
   return (
-    <div className="dashboard-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', marginBottom: '30px' }}>
+    <DashboardGrid minWidth="240px">
       <div className="card" style={{ borderTop: '4px solid var(--accent-blue)' }}>
         <div className="card-header">
           <h3 className="card-title">Patrimonio Netto</h3>
@@ -40,6 +41,6 @@ export default function StatsCards({ data }) {
         <div className="card-value value-negative" style={{fontSize: '1.6em'}}>€ {(data.totalDebt || 0).toLocaleString('it-IT', { minimumFractionDigits: 2 })}</div>
         <div className="card-subtitle">Totale finanziamenti</div>
       </div>
-    </div>
+    </DashboardGrid>
   );
 }

@@ -1,10 +1,12 @@
+import DashboardGrid from '../common/DashboardGrid';
+
 export default function AccountsGrid({ accounts }) {
   if (!accounts || accounts.length === 0) return null;
 
   return (
     <>
       <h3 className="chart-title" style={{ marginBottom: '15px' }}>Situazione Liquidità per Conto</h3>
-      <div className="dashboard-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', marginBottom: '30px' }}>
+      <DashboardGrid minWidth="280px">
         {accounts.map((acc, idx) => (
           <div key={idx} className="card account-card" style={{ padding: '15px', position: 'relative', overflow: 'hidden' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
@@ -47,7 +49,7 @@ export default function AccountsGrid({ accounts }) {
             </div>
           </div>
         ))}
-      </div>
+      </DashboardGrid>
     </>
   );
 }

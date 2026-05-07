@@ -1,4 +1,5 @@
 import { TrendingUp, PieChart } from 'lucide-react';
+import DashboardGrid from '../common/DashboardGrid';
 
 export default function CashFlowStats({ data, year }) {
   const getSavingsPercentage = () => {
@@ -7,7 +8,7 @@ export default function CashFlowStats({ data, year }) {
   };
 
   return (
-    <div className="dashboard-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+    <DashboardGrid minWidth="300px">
       <div className="card">
         <div className="card-header">
           <h3 className="card-title">Entrate Annuali</h3>
@@ -36,6 +37,6 @@ export default function CashFlowStats({ data, year }) {
         </div>
         <div className="card-subtitle">Margine del {getSavingsPercentage()}%</div>
       </div>
-    </div>
+    </DashboardGrid>
   );
 }

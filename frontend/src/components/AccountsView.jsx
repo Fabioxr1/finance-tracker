@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Wallet, Plus, Trash2, Edit2, X, Check } from 'lucide-react';
+import DashboardGrid from './common/DashboardGrid';
 import '../index.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -82,7 +83,7 @@ export default function AccountsView() {
           Nessun conto configurato. Aggiungine uno qui sotto!
         </div>
       ) : (
-        <div className="dashboard-grid">
+        <DashboardGrid>
           {accounts.map(acc => (
             <div className="card" key={acc.id}>
               {editingId === acc.id ? (
@@ -146,7 +147,7 @@ export default function AccountsView() {
               )}
             </div>
           ))}
-        </div>
+        </DashboardGrid>
       )}
 
       {/* FORM AGGIUNTA */}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Tag, Calendar, ChevronRight, TrendingDown } from 'lucide-react';
+import DashboardGrid from './common/DashboardGrid';
 import RunwaySimulator from './RunwaySimulator';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -138,7 +139,7 @@ export default function TagStats() {
         </div>
       </div>
 
-      <div className="dashboard-grid" style={{ gridTemplateColumns: '1fr' }}>
+      <DashboardGrid minWidth="100%">
         {/* Grafico a Barre */}
         <div className="card">
           <h3 className="card-title" style={{ marginBottom: '20px' }}>Distribuzione Spesa per Tag</h3>
@@ -210,7 +211,7 @@ export default function TagStats() {
             </table>
           </div>
         </div>
-      </div>
+      </DashboardGrid>
     </div>
   );
 }

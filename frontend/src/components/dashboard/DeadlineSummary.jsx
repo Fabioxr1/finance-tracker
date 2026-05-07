@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AlertTriangle, CalendarRange } from 'lucide-react';
+import DashboardGrid from '../common/DashboardGrid';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -80,7 +81,7 @@ export default function DeadlineSummary() {
         }}></div>
       </div>
 
-      <div className="dashboard-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', margin: 0 }}>
+      <DashboardGrid minWidth="300px" marginBottom="0">
         {/* Riquadro 1: Totale Spese Fisse Annuali */}
         <div className="card" style={{ 
           background: 'linear-gradient(135deg, rgba(163, 113, 247, 0.1) 0%, rgba(47, 129, 247, 0.05) 100%)',
@@ -122,7 +123,7 @@ export default function DeadlineSummary() {
             Importo totale delle scadenze imminenti o non ancora pagate.
           </div>
         </div>
-      </div>
+      </DashboardGrid>
     </section>
   );
 }

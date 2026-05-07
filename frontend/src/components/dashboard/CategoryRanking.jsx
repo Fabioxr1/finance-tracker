@@ -1,6 +1,8 @@
+import DashboardGrid from '../common/DashboardGrid';
+
 export default function CategoryRanking({ incomeData, expenseData, totalIncome, totalExpense, year }) {
   return (
-    <div className="dashboard-grid" style={{ marginTop: '30px' }}>
+    <DashboardGrid style={{ marginTop: '30px' }}>
       {/* Entrate per Categoria */}
       <div className="card">
         <h3 className="card-title" style={{ marginBottom: '5px' }}>Analisi Entrate per Tipologia ({year})</h3>
@@ -52,6 +54,6 @@ export default function CategoryRanking({ incomeData, expenseData, totalIncome, 
           }) : <p style={{ color: 'var(--text-secondary)', textAlign: 'center' }}>Nessun dato disponibile</p>}
         </div>
       </div>
-    </div>
+    </DashboardGrid>
   );
 }

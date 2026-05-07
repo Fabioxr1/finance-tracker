@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Tag, Plus, Trash2, X, Edit2, Check } from 'lucide-react';
+import DashboardGrid from './common/DashboardGrid';
 import '../index.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -82,7 +83,7 @@ export default function TagsView() {
     <div>
       <h2 className="chart-title" style={{ marginBottom: '20px' }}>Gestione Tag</h2>
       
-      <div className="dashboard-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
+      <DashboardGrid minWidth="220px">
         {tags.map(tag => (
           <div className="card" key={tag.id} style={{ borderLeft: `4px solid ${tag.color}`, padding: '15px' }}>
             {editingId === tag.id ? (
@@ -139,7 +140,7 @@ export default function TagsView() {
             )}
           </div>
         ))}
-      </div>
+      </DashboardGrid>
 
       <div className="card" style={{ marginTop: '30px', maxWidth: '500px' }}>
         <h3 className="card-title">Crea nuovo Tag</h3>

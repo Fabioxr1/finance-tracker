@@ -1,4 +1,5 @@
 import { Plus, Repeat } from 'lucide-react';
+import DashboardGrid from './common/DashboardGrid';
 
 // Componenti Investimenti
 import InvestmentStats from './investments/InvestmentStats';
@@ -90,7 +91,7 @@ export default function InvestmentsView() {
       />
 
       {/* PORTFOLIO E DISTRIBUZIONE */}
-      <div className="dashboard-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+      <DashboardGrid minWidth="300px">
         <div style={{ gridColumn: 'span 1' }}>
           <PortfolioTable 
             portfolio={portfolio} 
@@ -114,7 +115,7 @@ export default function InvestmentsView() {
         </div>
 
         <PortfolioChart data={portfolio} />
-      </div>
+      </DashboardGrid>
 
       {/* TUTTI I MODALI */}
       <InvestmentModals 

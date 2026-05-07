@@ -1,8 +1,9 @@
 import { Wallet, CreditCard, Calendar } from 'lucide-react';
+import DashboardGrid from '../common/DashboardGrid';
 
 export default function InstallmentStats({ totalDebt, monthlyCommitment, activeCount, freedomDate }) {
   return (
-    <div className="dashboard-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', marginBottom: '30px' }}>
+    <DashboardGrid minWidth="280px">
       <div className="card" style={{ borderTop: '4px solid var(--accent-red)' }}>
         <div className="card-header">
           <h3 className="card-title">Debito Residuo Totale</h3>
@@ -35,6 +36,6 @@ export default function InstallmentStats({ totalDebt, monthlyCommitment, activeC
         </div>
         <div className="card-subtitle">Data di libertà finanziaria stimata</div>
       </div>
-    </div>
+    </DashboardGrid>
   );
 }
