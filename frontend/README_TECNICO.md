@@ -433,12 +433,15 @@ const res = await fetch(`${API_URL}/endpoint`, {
 
 ## ⚠️ Punti Critici Frontend
 
-| Area | Rischio | File |
-|------|---------|------|
-| Routing | Non c'è React Router, solo stato `activeTab`. Se servono URL → va rifatto | `App.jsx` |
-| PredictionCard | Fa fetch indipendente da DashboardView. Se modifichi i dati predictions, questo è il componente | `PredictionCard.jsx` |
-| TransactionsView | Il componente più grande. Le operazioni bulk NON svuotano la selezione (per tag multipli) | `TransactionsView.jsx` |
-| CSV Import | Il parsing è in `csvParser.js`. Il POST va a `/transactions/batch` (endpoint `bulk` nel backend) | `csvParser.js`, `TransactionsView.jsx` |
-| Stili | Tutte le variabili CSS sono in `styles/vars.css`. Le select hanno classi specifiche (`select-dark-fix`) per visibilità su Windows | `styles/vars.css` |
-| Undo | Solo l'ultima operazione di massa può essere annullata (persistenza DB) | `useTransactions.js` |
 | Investimenti | I modali sono tutti in un singolo file `InvestmentModals.jsx` (23KB) — molto grande | `InvestmentModals.jsx` |
+
+---
+
+## 🌐 Risoluzione Problemi DNS (Fetch Failed)
+
+Se l'applicazione non carica i prezzi in tempo reale (investimenti) e il backend logga errori `fetch failed`:
+
+1.  **Causa:** Il container non risolve i DNS esterni.
+2.  **Soluzione:** È stata forzata la configurazione DNS nel file `docker-compose.yml`.
+3.  **Azione:** Riavviare l'ambiente con `docker compose up -d`.
+4.  **Verifica:** Controllare che `VITE_API_URL` punti correttamente all'IP del server (`SERVER_IP` nel file `.env`).

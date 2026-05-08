@@ -19,6 +19,7 @@
 9. [Flussi di Dati Critici](#-flussi-di-dati-critici)
 10. [Test Unitari](#-test-unitari)
 11. [Regole per le Modifiche](#-regole-per-le-modifiche)
+12. [Risoluzione Problemi DNS (Fetch Failed)](#-risoluzione-problemi-dns-fetch-failed)
 
 ---
 
@@ -433,3 +434,17 @@ docker exec -it reactspese_local-frontend-1 npm test
 2.  **Copia di Sicurezza Temporanea**: Per i file più critici (es. `TransactionTable.jsx`), creiamo una copia fisica in `backupsicirezzafile/` prima del refactoring.
 3.  **Verifica Chirurghica**: Dopo ogni modifica, confrontiamo il nuovo codice con il backup per assicurarci di non aver cancellato logiche preesistenti.
 4.  **Logging Obbligatorio**: Ogni rotta che modifica dati deve invocare `logTransaction` nel backend per mantenere la tracciabilità.
+
+---
+
+## 🌐 Risoluzione Problemi DNS (Fetch Failed)
+
+Se il backend restituisce errori di tipo `fetch failed` (visibili con `docker logs`) durante il recupero dei prezzi degli investimenti:
+
+1.  **Sintomo:** I prezzi non vengono caricati e i log mostrano `Errore Yahoo per ...: fetch failed`.
+2.  **Causa:** Il container Docker non riesce a risolvere i nomi di dominio (DNS).
+3.  **Soluzione:** È stata aggiunta la sezione `dns` nel file `docker-compose.yml` per forzare l'uso di Google DNS (`8.8.8.8`) e Cloudflare (`1.1.1.1`).
+4.  **Comando di ripristino:**
+    ```bash
+    docker compose up -d
+    ```

@@ -510,12 +510,15 @@ Usa `fs.appendFileSync` (sincrono, non blocca per righe singole).
 
 ## ⚠️ Punti Critici — Dove Fare Attenzione
 
-| Area | Rischio | File |
-|------|---------|------|
-| Calcolo saldo | I transfer devono togliere dal conto origine e aggiungere al destinazione | `accounts.js`, `balanceCalculator.js` |
-| Dashboard totalBalance | I transfer NON devono essere contati come spese | `dashboard.js` riga 18 |
-| Associazione rate | La keyword è case-insensitive e cerca in `description` | `transactions.js` |
-| Debito residuo | Fonte di verità = `SUM(amount) delle transazioni`, NON `paid_installments × monthly_amount` | `installments.js`, `predictEngine.js` |
-| Investimenti buy/sell | Crea un giroconto + un investment_transaction. Eliminando uno devi eliminare l'altro | `investments.js` |
-| PredictEngine | Crea nuova istanza per chiamata. Margine 5% su spese. Esclude straordinarie dalle medie | `predictEngine.js` |
 | Tag su rate | Se transazione è associata a finanziamento senza tag propri, eredita i tag del finanziamento | `transactions.js` POST / |
+
+---
+
+## 🌐 Risoluzione Problemi DNS (Fetch Failed)
+
+Se il backend restituisce errori di tipo `fetch failed` (visibili con `docker logs`) durante il recupero dei prezzi degli investimenti:
+
+1.  **Sintomo:** I prezzi non vengono caricati e i log mostrano `Errore Yahoo per ...: fetch failed`.
+2.  **Causa:** Il container Docker non riesce a risolvere i nomi di dominio (DNS) a causa di restrizioni dell'host o aggiornamenti kernel (es. Proxmox).
+3.  **Soluzione:** È stata aggiunta la sezione `dns` nel file `docker-compose.yml` per forzare l'uso di Google DNS (`8.8.8.8`) e Cloudflare (`1.1.1.1`).
+4.  **Verifica:** Entrare nel container e provare un ping: `docker exec -it reactspese_local-backend-1 ping google.com`.
