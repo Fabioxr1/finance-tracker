@@ -91,6 +91,14 @@ docker logs -f reactspese_local-backend-1
 docker exec -it reactspese_local-db-1 psql -U postgres -d spese
 ```
 
+### 🔄 Sincronizzazione dal Server Remoto
+Se vuoi aggiornare il database locale con i dati presenti sul server remoto:
+```bash
+chmod +x sync_from_remote.sh
+./sync_from_remote.sh
+```
+*Lo script eseguirà un dump sicuro via SSH e lo caricherà nel tuo Docker locale pulendo i dati precedenti.*
+
 ### Volumi montati
 - `./frontend:/app` — Codice frontend (hot-reload)
 - `./backend:/app` — Codice backend (nodemon)
