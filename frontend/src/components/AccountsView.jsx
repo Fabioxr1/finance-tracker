@@ -130,8 +130,8 @@ export default function AccountsView() {
                         placeholder="Saldo Iniziale €"
                         value={editAccount.initial_balance} 
                         onChange={val => {
-                          // Rimuove eventuali punti delle migliaia e trasforma la virgola in punto
-                          const cleanVal = val.toString().replace(/\./g, '').replace(',', '.');
+                          // Se c'è una virgola, la trasformiamo in punto. Se c'è già il punto, lo lasciamo.
+                          const cleanVal = val.toString().replace(',', '.');
                           setEditAccount({...editAccount, initial_balance: parseFloat(cleanVal) || 0});
                         }} 
                       />
@@ -191,7 +191,7 @@ export default function AccountsView() {
             containerStyle={{ width: '150px' }}
             value={newAccount.initial_balance}
             onChange={val => {
-              const cleanVal = val.toString().replace(/\./g, '').replace(',', '.');
+              const cleanVal = val.toString().replace(',', '.');
               setNewAccount({...newAccount, initial_balance: parseFloat(cleanVal) || 0});
             }}
           />
