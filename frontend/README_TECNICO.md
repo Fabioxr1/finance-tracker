@@ -32,6 +32,7 @@ frontend/src/
 │
 ├── components/
 │   ├── DashboardView.jsx       # Pagina Dashboard
+│   ├── MonthlyAnalysisView.jsx # Pagina Analisi Mensile Dettagliata
 │   ├── AccountsView.jsx        # Pagina Conti & Carte
 │   ├── TransactionsView.jsx    # Pagina Transazioni (la più complessa)
 │   ├── DeadlinesView.jsx       # Pagina Scadenze
@@ -114,6 +115,7 @@ Semplice bootstrap React. Nessun router esterno (il routing è gestito manualmen
 | Tab Key | Icona | Componente Renderizzato |
 |---------|-------|------------------------|
 | `dashboard` | LayoutDashboard | `<DashboardView />` |
+| `analisi-mensile` | CalendarRange | `<MonthlyAnalysisView />` |
 | `conti` | Wallet | `<AccountsView />` |
 | `transazioni` | ListOrdered | `<TransactionsView />` |
 | `scadenze` | CalendarClock | `<DeadlinesView />` |

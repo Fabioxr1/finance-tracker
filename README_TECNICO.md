@@ -39,6 +39,7 @@ Finance Tracker è un'applicazione **self-hosted** per la gestione completa dell
 | **Rate & Finanziamenti** | Tracciamento debiti con ricalcolo dinamico e associazione automatica |
 | **Simulatore** | Proiezione di risparmio a fine anno con slider obiettivo |
 | **Console SQL** | Esecuzione diretta di query SQL sul database |
+| **Analisi Mensile** | Deep-dive granulare su entrate/uscite del singolo mese |
 | **Test Suite** | Copertura calcoli finanziari e parsing dati (Vitest) |
 
 ---
@@ -316,6 +317,7 @@ Questa funzione viene eseguita **ad ogni avvio** del server e garantisce che lo 
 | Tab Sidebar | Componente | Sotto-componenti |
 |-------------|-----------|-----------------|
 | Dashboard | `DashboardView.jsx` | `StatsCards`, `AccountsGrid`, `CashFlowStats`, `HistoryChart`, `CategoryRanking`, `MonthlyTable`, `DeadlineSummary`, `PredictionCard` |
+| Analisi Mensile | `MonthlyAnalysisView.jsx` | — |
 | Conti & Carte | `AccountsView.jsx` | — |
 | Transazioni | `TransactionsView.jsx` | `useTransactions` (Hook), `TransactionFilters`, `TransactionForm`, `TransactionTable` (DesktopRow, MobileCard), `TransactionPagination`, `CSVControls` |
 | Scadenze | `DeadlinesView.jsx` | `DeadlineForm`, `DeadlineItem`, `DeadlineList` |
