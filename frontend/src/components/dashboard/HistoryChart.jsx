@@ -1,10 +1,21 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 export default function HistoryChart({ data, year }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-container">
+        <h3 className="chart-title">Andamento Entrate vs Uscite ({year})</h3>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1, color: 'var(--text-secondary)' }}>
+          Nessun dato disponibile
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="chart-container">
       <h3 className="chart-title">Andamento Entrate vs Uscite ({year})</h3>
-      <div style={{ flex: 1, minHeight: 0 }}>
+      <div style={{ flex: 1, minHeight: '300px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <defs>
