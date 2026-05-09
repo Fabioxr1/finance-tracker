@@ -16,6 +16,7 @@ const investmentPlansRouter = require("./routes/investment-plans");
 const installmentsRouter = require("./routes/installments");
 const tagsRouter = require("./routes/tags");
 const tagStatsRouter = require("./routes/tag-stats");
+const monthlyStatsRouter = require("./routes/monthly-stats");
 
 app.use(express.json());
 app.use("/api/deadlines", deadlinesRouter);
@@ -30,6 +31,7 @@ app.use("/api/investment-plans", investmentPlansRouter);
 app.use("/api/installments", installmentsRouter);
 app.use("/api/tags", tagsRouter);
 app.use("/api/tag-stats", tagStatsRouter);
+app.use("/api/monthly-stats", monthlyStatsRouter);
 
 const PORT = process.env.PORT || 5000;
 

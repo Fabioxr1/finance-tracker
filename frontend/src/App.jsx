@@ -13,7 +13,8 @@ import {
   CalendarClock,
   Repeat,
   Tag,
-  BarChart3
+  BarChart3,
+  CalendarRange
 } from 'lucide-react';
 import './index.css';
 import DashboardView from './components/DashboardView';
@@ -27,6 +28,7 @@ import DeadlinesView from './components/DeadlinesView';
 import SubscriptionsView from './components/SubscriptionsView';
 import TagsView from './components/TagsView';
 import TagStats from './components/TagStats';
+import MonthlyAnalysisView from './components/MonthlyAnalysisView';
 import AppFooter from './components/common/AppFooter';
 
 function App() {
@@ -68,6 +70,9 @@ function App() {
           <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => handleTabChange('dashboard')}>
             <LayoutDashboard size={20} /> Dashboard
           </div>
+          <div className={`nav-item ${activeTab === 'analisi-mensile' ? 'active' : ''}`} onClick={() => handleTabChange('analisi-mensile')}>
+            <CalendarRange size={20} /> Analisi Mensile
+          </div>
           <div className={`nav-item ${activeTab === 'conti' ? 'active' : ''}`} onClick={() => handleTabChange('conti')}>
             <Wallet size={20} /> Conti & Carte
           </div>
@@ -106,6 +111,7 @@ function App() {
       {/* Main Content */}
       <main className="main-content">
         {activeTab === 'dashboard' && <DashboardView />}
+        {activeTab === 'analisi-mensile' && <MonthlyAnalysisView />}
         {activeTab === 'conti' && <AccountsView />}
         {activeTab === 'transazioni' && <TransactionsView />}
         {activeTab === 'scadenze' && <DeadlinesView />}
