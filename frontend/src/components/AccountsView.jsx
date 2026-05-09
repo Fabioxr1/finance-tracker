@@ -123,13 +123,18 @@ export default function AccountsView() {
                       onChange={val => setEditAccount({...editAccount, type: val})}
                       required
                     />
-                    <FormInput 
-                      type="number" 
-                      step="0.01" 
-                      placeholder="Saldo Iniziale €"
-                      value={editAccount.initial_balance} 
-                      onChange={val => setEditAccount({...editAccount, initial_balance: parseFloat(val) || 0})} 
-                    />
+                    <div style={{ position: 'relative' }}>
+                      <FormInput 
+                        type="number" 
+                        step="0.01" 
+                        placeholder="Saldo Iniziale €"
+                        value={editAccount.initial_balance} 
+                        onChange={val => setEditAccount({...editAccount, initial_balance: parseFloat(val) || 0})} 
+                      />
+                      <div style={{ fontSize: '0.75em', marginTop: '4px', color: 'var(--text-secondary)' }}>
+                        Risultato finale: <strong>€ {(Number(editAccount.initial_balance) + Number(editAccount.transaction_sum || 0)).toLocaleString('it-IT', { minimumFractionDigits: 2 })}</strong>
+                      </div>
+                    </div>
                     <FormInput 
                       type="password" 
                       placeholder="Password Admin"

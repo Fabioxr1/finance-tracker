@@ -53,10 +53,18 @@ router.put('/:id', async (req, res) => {
   const isAdmin = admin_password === 'fabio';
 
   try {
-    // Controllo se è un conto di sistema
-    const checkRes = await pool.query('SELECT is_system FROM accounts WHERE id = $1', [req.params.id]);
-    if (checkRes.rows.length > 0 && checkRes.rows[0].is_system) {
+    const checkRes = await pool.query('SELECT is_system, initial_balance FROM accounts WHERE id = $1', [req.params.id]);
+    if (checkRes.rows.length === 0) return res.status(404).json({ error: "Conto non trovato" });
+    
+    if (checkRes.rows[0].is_system) {
       return res.status(403).json({ error: "I conti di sistema non possono essere modificati nelle impostazioni base." });
+    }
+
+    const oldInitialBalance = Number(checkRes.rows[0].initial_balance);
+    const newInitialBalance = initial_balance !== undefined ? Number(initial_balance) : oldInitialBalance;
+
+    if (newInitialBalance !== oldInitialBalance && !isAdmin) {
+      return res.status(401).json({ error: "Password Admin necessaria per modificare il saldo iniziale." });
     }
 
     let result;
