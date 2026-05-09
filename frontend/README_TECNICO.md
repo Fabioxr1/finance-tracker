@@ -47,7 +47,7 @@ frontend/src/
 │   │   ├── StatsCards.jsx      # 4 carte: Liquidità, Investimenti, Debito, Net Worth
 │   │   ├── AccountsGrid.jsx   # Griglia conti con entrate/uscite/saldo
 │   │   ├── CashFlowStats.jsx  # Flusso di cassa annuale
-│   │   ├── HistoryChart.jsx   # Grafico a barre entrate vs uscite mensili
+│   │   ├── HistoryChart.jsx   # Grafico a barre entrate vs uscite mensili (con min-height e gestione dati assenti)
 │   │   ├── CategoryRanking.jsx # Classifica categorie entrate/uscite
 │   │   ├── MonthlyTable.jsx   # Tabella dettaglio mese per mese
 │   │   ├── DeadlineSummary.jsx # Riepilogo scadenze annuali
