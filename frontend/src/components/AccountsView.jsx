@@ -129,7 +129,11 @@ export default function AccountsView() {
                         step="0.01" 
                         placeholder="Saldo Iniziale €"
                         value={editAccount.initial_balance} 
-                        onChange={val => setEditAccount({...editAccount, initial_balance: parseFloat(val) || 0})} 
+                        onChange={val => {
+                          // Rimuove eventuali punti delle migliaia e trasforma la virgola in punto
+                          const cleanVal = val.toString().replace(/\./g, '').replace(',', '.');
+                          setEditAccount({...editAccount, initial_balance: parseFloat(cleanVal) || 0});
+                        }} 
                       />
                       <div style={{ fontSize: '0.75em', marginTop: '4px', color: 'var(--text-secondary)' }}>
                         Risultato finale: <strong>€ {(Number(editAccount.initial_balance) + Number(editAccount.transaction_sum || 0)).toLocaleString('it-IT', { minimumFractionDigits: 2 })}</strong>
@@ -186,7 +190,10 @@ export default function AccountsView() {
             placeholder="Saldo di Partenza €" 
             containerStyle={{ width: '150px' }}
             value={newAccount.initial_balance}
-            onChange={val => setNewAccount({...newAccount, initial_balance: parseFloat(val) || 0})}
+            onChange={val => {
+              const cleanVal = val.toString().replace(/\./g, '').replace(',', '.');
+              setNewAccount({...newAccount, initial_balance: parseFloat(cleanVal) || 0});
+            }}
           />
           <AppButton type="submit" icon={Plus}>Aggiungi</AppButton>
         </form>
