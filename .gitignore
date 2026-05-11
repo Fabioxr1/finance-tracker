@@ -32,6 +32,7 @@ ollama_data/
 .agents/
 scratch/
 *.sql
+!backend/init.sql
 *.xlsx
 deploy-code.sh
 deploy.sh
