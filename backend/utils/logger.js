@@ -1,7 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-
-const logFilePath = path.join(__dirname, '..', 'transactions.log');
+const basePath = path.resolve(__dirname, '..');
+const logFilePath = path.normalize(path.join(basePath, 'transactions.log'));
+if (!logFilePath.startsWith(basePath)) {
+  throw new Error("Invalid log file path specified");
+}
 
 /**
  * Logga un'operazione su una transazione nel file transactions.log

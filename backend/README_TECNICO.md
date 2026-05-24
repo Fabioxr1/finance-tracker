@@ -482,7 +482,7 @@ TIMESTAMP | ID=123 | CREATE [EXPENSE] | 150€ | Spesa supermercato | ACC=1 | CA
 ```
 Per i transfer: `FROM=1 TO=2`
 
-Usa `fs.appendFileSync` (sincrono, non blocca per righe singole).
+Usa `fs.appendFileSync` (sincrono, non blocca per righe singole). Il percorso del file di log (`logFilePath`) viene normalizzato con `path.normalize` e validato garantendo che risieda all'interno della cartella base del backend (`basePath`) per prevenire vulnerabilità di tipo Path Traversal.
 
 ---
 
